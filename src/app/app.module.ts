@@ -26,11 +26,14 @@ import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
+      useFactory: (configService: ConfigService): MongooseModuleOptions => {
+        const username = encodeURIComponent(configService.get<string>('MONGODB_USERNAME'));
+        const password = encodeURIComponent(configService.get<string>('MONGODB_PASSWORD'));
+        const databaseName = encodeURIComponent(configService.get<string>('MONGODB_DATABASE_NAME'))
+        const uri = configService.get<string>('MONGODB_URI');
         const options: MongooseModuleOptions = {
-          uri: configService.get<string>('MONGODB_URI'),
+          uri: `mongodb://${username}:${password}@${uri}/${databaseName}`,
         };
-
         return options;
       },
     }),
