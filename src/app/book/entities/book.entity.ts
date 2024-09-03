@@ -41,12 +41,30 @@ export class Book {
 }
 
 @ObjectType()
-export class GetBooksPaginatedResponse {
-  @Field(() => [Book], { nullable: false, defaultValue: [] })
-  books: Book[];
+export class Edge {
+  @Field(() => String)
+  cursor: String
+  
+  @Field(() => Book, { nullable: false })
+  node: Book;
+}
 
-  @Field(() => Int, { nullable: false, defaultValue: 0 })
-  booksCount: number;
+@ObjectType()
+export class PageInfo {
+  @Field(() => Boolean)
+  hasNextPage: Boolean
+
+  @Field(() => String)
+  endCursor: String
+}
+
+@ObjectType()
+export class PaginationResult {
+  @Field(() => [Edge])
+  edges: [Edge]
+
+  @Field(() => PageInfo)
+  pageInfo: PageInfo
 }
 
 export type BookDocument = Book & Document;

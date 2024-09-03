@@ -11,17 +11,22 @@ import { BookModule } from './book/book.module';
 import { AuthorModule } from './author/author.module';
 import { CommonModule } from './common/common.module';
 import { AuthModule } from './auth/auth.module';
-import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
+import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
 
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-      playground: false,
-      plugins: [ApolloServerPluginLandingPageLocalDefault()],
+      playground: true,
+      // sortSchema: true,
+      // plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
       cors: true,
       introspection: true,
+      // cache: 'bounded',
+      // csrfPrevention: true,
+      debug: true,
+      installSubscriptionHandlers: true,
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],

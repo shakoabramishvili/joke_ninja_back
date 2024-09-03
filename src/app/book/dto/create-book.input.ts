@@ -19,8 +19,6 @@ export class CreateBookInput {
 
   @Field(() => String)
   @IsString()
-  @MinLength(10)
-  @MaxLength(255)
   description: string;
 
   @Field(() => Float)
