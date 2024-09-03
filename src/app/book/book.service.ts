@@ -3,8 +3,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Schema as MongooSchema, Types } from 'mongoose';
 import { CreateBookInput } from './dto/create-book.input';
 import { UpdateBookInput } from './dto/update-book.input';
-import { Book, BookDocument, Edge, PageInfo } from './entities/book.entity';
+import { Book, BookDocument, Edge } from './entities/book.entity';
 import { PaginationInput } from '../common/dto/get-paginated.args';
+import { PageInfo, paginate } from '../utils/paginationResult';
 
 @Injectable()
 export class BookService {
@@ -25,32 +26,16 @@ export class BookService {
     let query = this.bookModel.find().populate('author');
     if (after) {
       const lastBook = await this.bookModel.findById(after).exec();
-      // const afterObjectId = new Types.ObjectId(after);
-      console.log(typeof lastBook)
+      
       if (lastBook) {
         query = query.where('_id').gt(lastBook._id as any);
       }
     }
-
+    
     const books = await query.limit(limit).exec();
-    // console.log(books)
-    const hasNextPage = books.length === limit;
-    const endCursor = books.length ? books[books.length - 1]._id.toString() : null;
-    console.log(endCursor, 'hasNextPage')
-    const edges: Edge[] = books.map(book => ({
-      cursor: book._id.toString(),
-      node: book,
-    }));
 
-    const pageInfo: PageInfo = {
-      hasNextPage,
-      endCursor,
-    };
-
-    return {
-      edges,
-      pageInfo,
-    };
+    const pages = paginate<Book>(books, limit)
+    return pages
   }
 
   getBookById(

@@ -13,6 +13,13 @@ type GetAuthorsPaginatedResponse {
   authorsCount: Int!
 }
 
+type PageInfo {
+  hasNextPage: Boolean!
+  endCursor: String!
+  hasPreviousPage: Boolean!
+  startCursor: String!
+}
+
 type Book {
   _id: String!
   title: String!
@@ -27,11 +34,6 @@ type Book {
 type Edge {
   cursor: String!
   node: Book!
-}
-
-type PageInfo {
-  hasNextPage: Boolean!
-  endCursor: String!
 }
 
 type PaginationResult {

@@ -3,6 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Schema as MongooSchema } from 'mongoose';
 import { Author } from 'src/app/author/entities/author.entity';
 import { User } from 'src/app/user/entities/user.entity';
+import { PageInfo } from 'src/app/utils/paginationResult';
 
 @ObjectType()
 @Schema()
@@ -49,14 +50,6 @@ export class Edge {
   node: Book;
 }
 
-@ObjectType()
-export class PageInfo {
-  @Field(() => Boolean)
-  hasNextPage: Boolean
-
-  @Field(() => String)
-  endCursor: String
-}
 
 @ObjectType()
 export class PaginationResult {
