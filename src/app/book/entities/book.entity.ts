@@ -2,6 +2,7 @@ import { ObjectType, Field, Int, Float } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Schema as MongooSchema } from 'mongoose';
 import { Author } from 'src/app/author/entities/author.entity';
+import { Paginated } from 'src/app/common/dto/pagination-result.type';
 import { User } from 'src/app/user/entities/user.entity';
 
 @ObjectType()
@@ -41,31 +42,7 @@ export class Book {
 }
 
 @ObjectType()
-export class Edge {
-  @Field(() => String)
-  cursor: String
-  
-  @Field(() => Book, { nullable: false })
-  node: Book;
-}
-
-@ObjectType()
-export class PageInfo {
-  @Field(() => Boolean)
-  hasNextPage: Boolean
-
-  @Field(() => String)
-  endCursor: String
-}
-
-@ObjectType()
-export class PaginationResult {
-  @Field(() => [Edge])
-  edges: [Edge]
-
-  @Field(() => PageInfo)
-  pageInfo: PageInfo
-}
+export class PaginatedBooks extends Paginated(Book) { }
 
 export type BookDocument = Book & Document;
 export const BookSchema = SchemaFactory.createForClass(Book);

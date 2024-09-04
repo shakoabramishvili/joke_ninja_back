@@ -4,7 +4,7 @@ import { Author, GetAuthorsPaginatedResponse } from './entities/author.entity';
 import { CreateAuthorInput } from './dto/create-author.input';
 import { UpdateAuthorInput } from './dto/update-author.input';
 import { Schema as MongooSchema } from 'mongoose';
-import { GetPaginatedArgs } from '../common/dto/get-paginated.args';
+import { PaginationArgs } from '../common/dto/get-paginated.args';
 import { JwtAuthGuard } from '../auth/jwt-auth.gards';
 import { UseGuards } from '@nestjs/common';
 
@@ -21,9 +21,9 @@ export class AuthorResolver {
   }
 
   @Query(() => GetAuthorsPaginatedResponse, { name: 'allAuthors' })
-  findAll(@Args() args: GetPaginatedArgs) {
-    const { limit, skip } = args;
-    return this.authorService.findAll(limit, skip);
+  findAll(@Args() args: PaginationArgs) {
+    const { first } = args;
+    return this.authorService.findAll(first);
   }
 
   @Query(() => Author, { name: 'author' })

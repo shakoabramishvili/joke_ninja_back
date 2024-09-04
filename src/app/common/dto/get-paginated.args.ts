@@ -2,19 +2,25 @@ import { Field, ArgsType, Int } from '@nestjs/graphql';
 import { Schema as MongooSchema } from 'mongoose';
 
 @ArgsType()
-export class GetPaginatedArgs {
-  @Field(() => Int, { defaultValue: 10, nullable: true })
-  limit?: number;
+export class PaginationArgs { //need
+  @Field(() => Int, { nullable: true })
+  first: number;
 
-  @Field(() => Int, { defaultValue: 0, nullable: true })
-  skip?: number;
+  @Field(() => String, { nullable: true })
+  after: string;
+
+  @Field(() => Int, { nullable: true })
+  last: number;
+
+  @Field(() => String, { nullable: true })
+  before: string;
 }
 
-@ArgsType()
-export class PaginationInput {
-  @Field(() => String, {nullable: true })
-  after?: MongooSchema.Types.ObjectId;
+// @ArgsType()
+// export class PaginationInput {
+//   @Field(() => String, {nullable: true })
+//   after?: MongooSchema.Types.ObjectId;
 
-  @Field(() => Int, {nullable: true })
-  first?: number
-}
+//   @Field(() => Int, {nullable: true })
+//   first?: number
+// }

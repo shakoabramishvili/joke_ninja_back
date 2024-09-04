@@ -1,9 +1,9 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { BookService } from './book.service';
-import { Book, PaginationResult } from './entities/book.entity';
+import { Book, PaginatedBooks } from './entities/book.entity';
 import { CreateBookInput } from './dto/create-book.input';
 import { UpdateBookInput } from './dto/update-book.input';
-import { GetPaginatedArgs, PaginationInput } from '../common/dto/get-paginated.args';
+import { PaginationArgs } from '../common/dto/get-paginated.args';
 import { GetPaginatedSubDocumentsArgs } from '../common/dto/get-paginated-sub-document.args';
 import { Schema as MongooSchema } from 'mongoose';
 import { UseGuards } from '@nestjs/common';
@@ -20,15 +20,15 @@ export class BookResolver {
     return this.bookService.createBook(createBookInput);
   }
 
-  @Query(() => PaginationResult, { name: 'books' })
-  findAllBooks(@Args() args: PaginationInput) {
+  @Query(() => PaginatedBooks, { name: 'books' })
+  findAllBooks(@Args() args: PaginationArgs) {
     return this.bookService.findAllBooks(args);
   }
 
   @Query(() => Book, { name: 'book' })
   findOne(@Args() args: GetPaginatedSubDocumentsArgs) {
-    const { limit, skip, _id } = args;
-    return this.bookService.getBookById(_id, skip, limit);
+    const { first, _id } = args;
+    return this.bookService.getBookById(_id, first);
   }
 
   @Mutation(() => Book)

@@ -1,10 +1,10 @@
 import { Field, ArgsType, PartialType } from '@nestjs/graphql';
-import { GetPaginatedArgs } from './get-paginated.args';
 import { Schema as MongooSchema } from 'mongoose';
+import { PaginationArgs } from './get-paginated.args';
 
 @ArgsType()
 export class GetPaginatedSubDocumentsArgs extends PartialType(
-  GetPaginatedArgs,
+  PaginationArgs,
 ) {
   @Field(() => String)
   _id: MongooSchema.Types.ObjectId;

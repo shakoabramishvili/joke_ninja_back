@@ -13,6 +13,13 @@ type GetAuthorsPaginatedResponse {
   authorsCount: Int!
 }
 
+type PageInfo {
+  hasNextPage: Boolean!
+  endCursor: String!
+  hasPreviousPage: Boolean!
+  startCursor: String!
+}
+
 type Book {
   _id: String!
   title: String!
@@ -24,19 +31,14 @@ type Book {
   readers: [User!]!
 }
 
-type Edge {
+type PaginatedBooks {
+  edges: [BookEdge!]
+  pageInfo: PageInfo
+}
+
+type BookEdge {
   cursor: String!
   node: Book!
-}
-
-type PageInfo {
-  hasNextPage: Boolean!
-  endCursor: String!
-}
-
-type PaginationResult {
-  edges: [Edge!]!
-  pageInfo: PageInfo!
 }
 
 type User {
@@ -59,9 +61,9 @@ type Query {
 
   """This will be like getting the user profile by his id"""
   userById(id: String!): User!
-  books(after: String, first: Int): PaginationResult!
-  book(limit: Int = 10, skip: Int = 0, _id: String!): Book!
-  allAuthors(limit: Int = 10, skip: Int = 0): GetAuthorsPaginatedResponse!
+  books(first: Int, after: String, last: Int, before: String): PaginatedBooks!
+  book(first: Int, after: String, last: Int, before: String, _id: String!): Book!
+  allAuthors(first: Int, after: String, last: Int, before: String): GetAuthorsPaginatedResponse!
   author(id: String!): Author!
 }
 

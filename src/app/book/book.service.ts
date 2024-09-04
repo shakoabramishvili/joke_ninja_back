@@ -1,16 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Schema as MongooSchema, Types } from 'mongoose';
+import { Model, Schema as MongooSchema } from 'mongoose';
 import { CreateBookInput } from './dto/create-book.input';
 import { UpdateBookInput } from './dto/update-book.input';
-import { Book, BookDocument, Edge, PageInfo } from './entities/book.entity';
-import { PaginationInput } from '../common/dto/get-paginated.args';
+import { Book, BookDocument } from './entities/book.entity';
+import { PaginationArgs } from '../common/dto/get-paginated.args';
+import { PaginationService } from '../common/pagination.service';
 
 @Injectable()
 export class BookService {
   constructor(
     @InjectModel(Book.name)
     private bookModel: Model<BookDocument>,
+    private readonly paginationService: PaginationService
   ) {}
 
   createBook(createBookInput: CreateBookInput) {
@@ -18,44 +20,12 @@ export class BookService {
     return createdBook.save();
   }
 
-  async findAllBooks(pagination: PaginationInput) {
-    const { after, first } = pagination;
-    const limit = first || Infinity;
-
-    let query = this.bookModel.find().populate('author');
-    if (after) {
-      const lastBook = await this.bookModel.findById(after).exec();
-      // const afterObjectId = new Types.ObjectId(after);
-      console.log(typeof lastBook)
-      if (lastBook) {
-        query = query.where('_id').gt(lastBook._id as any);
-      }
-    }
-
-    const books = await query.limit(limit).exec();
-    // console.log(books)
-    const hasNextPage = books.length === limit;
-    const endCursor = books.length ? books[books.length - 1]._id.toString() : null;
-    console.log(endCursor, 'hasNextPage')
-    const edges: Edge[] = books.map(book => ({
-      cursor: book._id.toString(),
-      node: book,
-    }));
-
-    const pageInfo: PageInfo = {
-      hasNextPage,
-      endCursor,
-    };
-
-    return {
-      edges,
-      pageInfo,
-    };
+  async findAllBooks(pagination: PaginationArgs) {
+    return await this.paginationService.paginate(this.bookModel, pagination, ['author']);
   }
 
   getBookById(
     id: MongooSchema.Types.ObjectId,
-    readersSkip: number,
     readersLimit: number,
   ) {
     return this.bookModel
@@ -65,7 +35,6 @@ export class BookService {
         path: 'readers',
         options: {
           limit: readersLimit,
-          skip: readersSkip,
         },
       });
   }
