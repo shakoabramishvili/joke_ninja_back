@@ -65,7 +65,7 @@ type Joke {
   _id: String!
   question: String!
   answers: [Answer!]!
-  coverImage: String!
+  coverImage: String
 }
 
 type PaginatedJokes {
