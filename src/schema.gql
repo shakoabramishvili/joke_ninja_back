@@ -58,7 +58,7 @@ type LoginUserResponse {
 type Answer {
   text: String!
   canBeBest: Boolean!
-  klickCount: Int!
+  clickCount: Int!
 }
 
 type Joke {
