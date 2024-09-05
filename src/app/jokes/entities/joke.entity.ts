@@ -17,6 +17,10 @@ export class Joke {
   @Field(() => [Answer])
   @Prop({ type: [{ text: String, isCorrect: Boolean }] })
   answers: Answer[];
+
+  @Field(() => String)
+  @Prop()
+  coverImage: string;
 }
 
 @ObjectType()
