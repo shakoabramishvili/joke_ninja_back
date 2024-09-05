@@ -14,5 +14,5 @@ export class Answer {
 
   @Field(() => Int)
   @Prop()
-  klickCount: Number
+  clickCount: Number
 }
