@@ -12,6 +12,7 @@ import { AuthorModule } from './author/author.module';
 import { CommonModule } from './common/common.module';
 import { AuthModule } from './auth/auth.module';
 import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
+import { JokesModule } from './jokes/jokes.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPag
     AuthorModule,
     CommonModule,
     AuthModule,
+    JokesModule,
   ],
   providers: [AppService, AppResolver],
 })
