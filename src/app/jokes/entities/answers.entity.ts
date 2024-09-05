@@ -8,11 +8,11 @@ export class Answer {
   @Prop()
   text: string;
 
-  @Field(() => Boolean)
+  @Field(() => Boolean, {nullable: true})
   @Prop()
   canBeBest: boolean;
 
-  @Field(() => Int)
+  @Field(() => Int, {nullable: true})
   @Prop()
   clickCount: Number
 }
