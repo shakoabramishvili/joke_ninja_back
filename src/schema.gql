@@ -2,10 +2,17 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Author {
-  _id: String!
+type User {
+  _id: ID!
   name: String!
-  books: [Book!]!
+  email: String!
+  password: String!
+  address: String!
+}
+
+type LoginUserResponse {
+  user: User!
+  authToken: String!
 }
 
 type PageInfo {
@@ -15,31 +22,6 @@ type PageInfo {
   startCursor: String!
 }
 
-type Book {
-  _id: String!
-  title: String!
-  description: String!
-  price: Float!
-  coverImage: String!
-  isbn: String!
-  author: Author!
-  readers: [User!]!
-}
-
-type User {
-  _id: String!
-  name: String!
-  email: String!
-  password: String!
-  address: String!
-  books: [Book!]!
-}
-
-type LoginUserResponse {
-  user: User!
-  authToken: String!
-}
-
 type Answer {
   text: String!
   canBeBest: Boolean!
@@ -47,7 +29,7 @@ type Answer {
 }
 
 type Joke {
-  _id: String!
+  _id: ID!
   question: String!
   answers: [Answer!]!
   coverImage: String
@@ -65,7 +47,7 @@ type JokeEdge {
 
 type Query {
   users: [User!]!
-  getUserById(id: String!): User!
+  getUserById(id: ID!): User!
   jokes(first: Int, after: String, last: Int, before: String): PaginatedJokes!
 }
 
@@ -91,10 +73,10 @@ input CreateUserInput {
 input UpdateJokeInput {
   question: String
   coverImage: String
-  _id: String!
+  _id: ID!
 }
 
 input IncrementAnswerCountInput {
-  _id: String!
+  _id: ID!
   answerIndex: Int!
 }
