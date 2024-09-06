@@ -15,7 +15,7 @@ export class Joke {
   question: string;
 
   @Field(() => [Answer])
-  @Prop({ type: [{ text: String, isCorrect: Boolean }] })
+  @Prop()
   answers: Answer[];
 
   @Field(() => String, {nullable: true})

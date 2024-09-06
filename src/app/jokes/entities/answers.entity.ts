@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from "@nestjs/graphql";
+import { Field, Float, Int, ObjectType } from "@nestjs/graphql";
 import { Prop, Schema } from "@nestjs/mongoose";
 
 @ObjectType()
@@ -8,11 +8,11 @@ export class Answer {
   @Prop()
   text: string;
 
-  @Field(() => Boolean, {nullable: true})
+  @Field(() => Boolean)
   @Prop()
   canBeBest: boolean;
 
-  @Field(() => Int, {nullable: true})
-  @Prop()
-  clickCount: Number
+  @Field(() => Int)
+  @Prop({ default: 0 })
+  clickCount: number;
 }
