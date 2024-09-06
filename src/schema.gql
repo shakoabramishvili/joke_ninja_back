@@ -60,7 +60,6 @@ type Mutation {
   signup(signupInput: CreateUserInput!): User!
   createJoke(createJokeInput: CreateJokeInput!): JokeResponse!
   updateJoke(updateJokeInput: UpdateJokeInput!): JokeResponse!
-  incrementAnswerCount(incrementAnswerCountInput: IncrementAnswerCountInput!): JokeResponse!
 }
 
 input LoginUserInput {
@@ -84,9 +83,5 @@ input UpdateJokeInput {
   question: String
   coverImage: String
   _id: ID!
-}
-
-input IncrementAnswerCountInput {
-  _id: ID!
-  answerIndex: Int!
+  answerIndex: Int
 }
