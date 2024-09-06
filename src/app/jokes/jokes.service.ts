@@ -29,9 +29,31 @@ export class JokesService {
     return `This action returns a #${id} joke`;
   }
 
-  updateJoke(id: MongooSchema.Types.ObjectId, updateJokeInput: UpdateJokeInput) {
-    return this.jokeModel.findByIdAndUpdate(id, updateJokeInput);
-  }
+  async updateJoke(id: MongooSchema.Types.ObjectId, updateJokeInput: UpdateJokeInput) {
+    const { _id, answerIndex } = updateJokeInput;
+    
+    const joke = await this.jokeModel.findById(_id);
+    if (!joke) throw new NotFoundException('joke_not_found');
+    
+    if (answerIndex !== undefined && answerIndex !== null) {
+      if (answerIndex < 0 || answerIndex >= joke.answers.length) {
+        throw new BadRequestException('invalid_answer_index');
+      }
+  
+      await this.jokeModel.updateOne(
+        { _id },
+        { $inc: { [`answers.${answerIndex}.clickCount`]: 1 } }
+      );
+    }
+    
+    const updatedJoke = await this.jokeModel.findByIdAndUpdate(
+      id, 
+      updateJokeInput, 
+      { new: true }
+    );
+    
+    return { joke: updatedJoke };
+  }  
 
   async incrementAnswerCount(id: MongooSchema.Types.ObjectId, incrementAnswerCountInput: IncrementAnswerCountInput) {
     const { _id, answerIndex } = incrementAnswerCountInput;
@@ -53,7 +75,7 @@ export class JokesService {
       { _id, [`answers.${answerIndex}`]: { $exists: true } },
       { $inc: { [`answers.${answerIndex}.clickCount`]: 1 } }
     );
-    
+
     const result = await this.jokeModel.findById(_id);
 
     const response: JokeResponse = {

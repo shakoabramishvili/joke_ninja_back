@@ -31,10 +31,10 @@ export class JokesResolver {
     return this.jokesService.updateJoke(updateJokeInput._id, updateJokeInput);
   }
 
-  @Mutation(() => JokeResponse)
-  incrementAnswerCount(@Args('incrementAnswerCountInput') incrementAnswerCountInput: IncrementAnswerCountInput) {
-    return this.jokesService.incrementAnswerCount(incrementAnswerCountInput._id, incrementAnswerCountInput);
-  }
+  // @Mutation(() => JokeResponse)
+  // incrementAnswerCount(@Args('incrementAnswerCountInput') incrementAnswerCountInput: IncrementAnswerCountInput) {
+  //   return this.jokesService.incrementAnswerCount(incrementAnswerCountInput._id, incrementAnswerCountInput);
+  // }
 
   // @Mutation(() => Joke)
   // removeJoke(@Args('id', { type: () => Int }) id: number) {
