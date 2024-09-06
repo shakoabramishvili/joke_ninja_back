@@ -47,12 +47,12 @@ import { JokesModule } from './jokes/jokes.module';
       cache: true,
     }),
     UserModule,
-    BookModule,
-    AuthorModule,
+    // BookModule,
+    // AuthorModule,
     CommonModule,
     AuthModule,
     JokesModule,
   ],
-  providers: [AppService, AppResolver],
+  providers: [],
 })
 export class AppModule {}
