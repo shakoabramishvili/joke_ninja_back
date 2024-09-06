@@ -8,11 +8,6 @@ type Author {
   books: [Book!]!
 }
 
-type GetAuthorsPaginatedResponse {
-  authors: [Author!]!
-  authorsCount: Int!
-}
-
 type PageInfo {
   hasNextPage: Boolean!
   endCursor: String!
@@ -29,16 +24,6 @@ type Book {
   isbn: String!
   author: Author!
   readers: [User!]!
-}
-
-type PaginatedBooks {
-  edges: [BookEdge!]
-  pageInfo: PageInfo
-}
-
-type BookEdge {
-  cursor: String!
-  node: Book!
 }
 
 type User {
@@ -79,32 +64,21 @@ type JokeEdge {
 }
 
 type Query {
-  getHello: String!
   users: [User!]!
-
-  """This will be like getting the user profile by his id"""
-  userById(id: String!): User!
-  books(first: Int, after: String, last: Int, before: String): PaginatedBooks!
-  book(first: Int, after: String, last: Int, before: String, _id: String!): Book!
-  allAuthors(first: Int, after: String, last: Int, before: String): GetAuthorsPaginatedResponse!
-  author(id: String!): Author!
+  getUserById(id: String!): User!
   jokes(first: Int, after: String, last: Int, before: String): PaginatedJokes!
 }
 
 type Mutation {
-  createUser(createUserInput: CreateUserInput!): User!
-  updateUser(updateUserInput: UpdateUserInput!): User!
-  removeUser(id: Int!): User!
-  createBook(createBookInput: CreateBookInput!): Book!
-  updateBook(updateBookInput: UpdateBookInput!): Book!
-  removeBook(id: String!): Book!
-  createAuthor(createAuthorInput: CreateAuthorInput!): Author!
-  updateAuthor(updateAuthorInput: UpdateAuthorInput!): Author!
-  removeAuthor(id: String!): Author!
   login(loginUserInput: LoginUserInput!): LoginUserResponse!
   signup(signupInput: CreateUserInput!): User!
   updateJoke(updateJokeInput: UpdateJokeInput!): Joke!
   incrementAnswerCount(incrementAnswerCountInput: IncrementAnswerCountInput!): Joke!
+}
+
+input LoginUserInput {
+  email: String!
+  password: String!
 }
 
 input CreateUserInput {
@@ -112,47 +86,6 @@ input CreateUserInput {
   email: String!
   password: String!
   address: String!
-}
-
-input UpdateUserInput {
-  name: String
-  email: String
-  password: String
-  address: String
-  _id: String!
-}
-
-input CreateBookInput {
-  title: String!
-  description: String!
-  price: Float!
-  coverImage: String!
-  isbn: String!
-  author: String!
-}
-
-input UpdateBookInput {
-  title: String
-  description: String
-  price: Float
-  coverImage: String
-  isbn: String
-  author: String
-  _id: String!
-}
-
-input CreateAuthorInput {
-  name: String!
-}
-
-input UpdateAuthorInput {
-  name: String
-  _id: String!
-}
-
-input LoginUserInput {
-  email: String!
-  password: String!
 }
 
 input UpdateJokeInput {
