@@ -5,15 +5,16 @@ import { CreateJokeInput } from './dto/create-joke.input';
 import { UpdateJokeInput } from './dto/update-joke.input';
 import { PaginationArgs } from '../common/dto/get-paginated.args';
 import { IncrementAnswerCountInput } from './dto/increment-answer-count.input';
+import { JokeResponse } from './dto/joke-response';
 
 @Resolver(() => Joke)
 export class JokesResolver {
   constructor(private readonly jokesService: JokesService) {}
 
-  // @Mutation(() => Joke)
-  // createJoke(@Args('createJokeInput') createJokeInput: CreateJokeInput) {
-  //   return this.jokesService.create(createJokeInput);
-  // }
+  @Mutation(() => JokeResponse)
+  createJoke(@Args('createJokeInput') createJokeInput: CreateJokeInput) {
+    return this.jokesService.create(createJokeInput);
+  }
 
   @Query(() => PaginatedJokes, { name: 'jokes' })
   findAllJokes(@Args() args: PaginationArgs) {
@@ -25,12 +26,12 @@ export class JokesResolver {
   //   return this.jokesService.findOne(id);
   // }
 
-  @Mutation(() => Joke)
+  @Mutation(() => JokeResponse)
   updateJoke(@Args('updateJokeInput') updateJokeInput: UpdateJokeInput) {
     return this.jokesService.updateJoke(updateJokeInput._id, updateJokeInput);
   }
 
-  @Mutation(() => Joke)
+  @Mutation(() => JokeResponse)
   incrementAnswerCount(@Args('incrementAnswerCountInput') incrementAnswerCountInput: IncrementAnswerCountInput) {
     return this.jokesService.incrementAnswerCount(incrementAnswerCountInput._id, incrementAnswerCountInput);
   }

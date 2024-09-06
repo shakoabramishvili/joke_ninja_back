@@ -7,6 +7,7 @@ import { Model, Schema as MongooSchema } from 'mongoose';
 import { PaginationService } from '../common/pagination.service';
 import { PaginationArgs } from '../common/dto/get-paginated.args';
 import { IncrementAnswerCountInput } from './dto/increment-answer-count.input';
+import { JokeResponse } from './dto/joke-response';
 
 @Injectable()
 export class JokesService {
@@ -16,7 +17,8 @@ export class JokesService {
     private readonly paginationService: PaginationService
   ) {}
   create(createJokeInput: CreateJokeInput) {
-    return 'This action adds a new joke';
+    const createJoke = new this.jokeModel(createJokeInput)
+    return createJoke.save();
   }
 
   async findAllJokes(pagination: PaginationArgs) {
@@ -52,7 +54,12 @@ export class JokesService {
       { $inc: { [`answers.${answerIndex}.clickCount`]: 1 } }
     );
     
-    return this.jokeModel.findById(_id);
+    const result = await this.jokeModel.findById(_id);
+
+    const response: JokeResponse = {
+      joke: result
+    }
+    return response
   }
 
   remove(id: number) {
