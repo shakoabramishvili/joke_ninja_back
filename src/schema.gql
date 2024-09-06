@@ -45,6 +45,10 @@ type JokeEdge {
   node: Joke!
 }
 
+type JokeResponse {
+  joke: Joke!
+}
+
 type Query {
   users: [User!]!
   getUserById(id: ID!): User!
@@ -54,8 +58,9 @@ type Query {
 type Mutation {
   login(loginUserInput: LoginUserInput!): LoginUserResponse!
   signup(signupInput: CreateUserInput!): User!
-  updateJoke(updateJokeInput: UpdateJokeInput!): Joke!
-  incrementAnswerCount(incrementAnswerCountInput: IncrementAnswerCountInput!): Joke!
+  createJoke(createJokeInput: CreateJokeInput!): JokeResponse!
+  updateJoke(updateJokeInput: UpdateJokeInput!): JokeResponse!
+  incrementAnswerCount(incrementAnswerCountInput: IncrementAnswerCountInput!): JokeResponse!
 }
 
 input LoginUserInput {
@@ -68,6 +73,11 @@ input CreateUserInput {
   email: String!
   password: String!
   address: String!
+}
+
+input CreateJokeInput {
+  question: String!
+  coverImage: String!
 }
 
 input UpdateJokeInput {
