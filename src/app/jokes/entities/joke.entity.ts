@@ -1,4 +1,4 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Schema as MongooSchema } from 'mongoose';
 import { Paginated } from 'src/app/common/dto/pagination-result.type';
@@ -7,7 +7,7 @@ import { Answer } from './answers.entity';
 @ObjectType()
 @Schema()
 export class Joke {
-  @Field(() => String)
+  @Field(() => ID)
   _id: MongooSchema.Types.ObjectId;
 
   @Field(() => String)

@@ -1,11 +1,11 @@
 import { CreateUserInput } from './create-user.input';
-import { InputType, Field, PartialType } from '@nestjs/graphql';
+import { InputType, Field, PartialType, ID } from '@nestjs/graphql';
 import { Schema as MongooSchema } from 'mongoose';
 import { IsString } from 'class-validator';
 
 @InputType()
 export class UpdateUserInput extends PartialType(CreateUserInput) {
-  @Field(() => String)
+  @Field(() => ID)
   @IsString()
   _id: MongooSchema.Types.ObjectId;
 }

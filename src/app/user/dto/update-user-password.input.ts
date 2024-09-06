@@ -1,10 +1,10 @@
-import { InputType, Field } from '@nestjs/graphql';
+import { InputType, Field, ID } from '@nestjs/graphql';
 import { IsString, IsStrongPassword } from 'class-validator';
 import { Schema as MongooSchema } from 'mongoose';
 
 @InputType()
 export class UpdatePasswordInput {
-  @Field(() => String)
+  @Field(() => ID)
   @IsString()
   _id: MongooSchema.Types.ObjectId;
 
