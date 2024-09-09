@@ -7,5 +7,5 @@ import { IsString } from 'class-validator';
 export class UpdateAuthorInput extends PartialType(CreateAuthorInput) {
   @Field(() => String)
   @IsString()
-  _id: MongooSchema.Types.ObjectId;
+  id: MongooSchema.Types.ObjectId;
 }

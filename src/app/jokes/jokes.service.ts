@@ -29,10 +29,10 @@ export class JokesService {
     return `This action returns a #${id} joke`;
   }
 
-  async updateJoke(id: MongooSchema.Types.ObjectId, updateJokeInput: UpdateJokeInput) {
-    const { _id, answerIndex } = updateJokeInput;
+  async updateJoke(_id: MongooSchema.Types.ObjectId, updateJokeInput: UpdateJokeInput) {
+    const { id, answerIndex } = updateJokeInput;
     
-    const joke = await this.jokeModel.findById(_id);
+    const joke = await this.jokeModel.findById(id);
     if (!joke) throw new NotFoundException('joke_not_found');
     
     if (answerIndex !== undefined && answerIndex !== null) {
@@ -41,7 +41,7 @@ export class JokesService {
       }
   
       await this.jokeModel.updateOne(
-        { _id },
+        { id },
         { $inc: { [`answers.${answerIndex}.clickCount`]: 1 } }
       );
     }
@@ -55,11 +55,11 @@ export class JokesService {
     return { joke: updatedJoke };
   }  
 
-  async incrementAnswerCount(id: MongooSchema.Types.ObjectId, incrementAnswerCountInput: IncrementAnswerCountInput) {
-    const { _id, answerIndex } = incrementAnswerCountInput;
+  async incrementAnswerCount(_id: MongooSchema.Types.ObjectId, incrementAnswerCountInput: IncrementAnswerCountInput) {
+    const { id, answerIndex } = incrementAnswerCountInput;
 
     // Fetch the joke by its ID
-    const joke = await this.jokeModel.findById(_id);
+    const joke = await this.jokeModel.findById(id);
 
     if (!joke) {
       throw new NotFoundException('joke_not_found');
@@ -72,11 +72,11 @@ export class JokesService {
 
     // Use MongoDB positional operator to increment clickCount for the answer at the specified index
     await this.jokeModel.updateOne(
-      { _id, [`answers.${answerIndex}`]: { $exists: true } },
+      { id, [`answers.${answerIndex}`]: { $exists: true } },
       { $inc: { [`answers.${answerIndex}.clickCount`]: 1 } }
     );
 
-    const result = await this.jokeModel.findById(_id);
+    const result = await this.jokeModel.findById(id);
 
     const response: JokeResponse = {
       joke: result

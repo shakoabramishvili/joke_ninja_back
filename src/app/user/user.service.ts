@@ -41,6 +41,6 @@ export class UserService {
   }
 
   remove(id: MongooSchema.Types.ObjectId) {
-    return this.userModel.deleteOne({ _id: id });
+    return this.userModel.deleteOne({ id: id });
   }
 }

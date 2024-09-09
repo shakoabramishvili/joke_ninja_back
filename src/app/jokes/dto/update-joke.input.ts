@@ -7,7 +7,7 @@ import { Schema as MongooSchema } from 'mongoose';
 export class UpdateJokeInput extends PartialType(CreateJokeInput) {
   @Field(() => ID)
   @IsMongoId()
-  _id: MongooSchema.Types.ObjectId;
+  id: MongooSchema.Types.ObjectId;
 
   @Field(() => Int, { nullable: true })
   @IsOptional()

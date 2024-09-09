@@ -28,14 +28,14 @@
 
 //   // @Query(() => Book, { name: 'book' })
 //   // findOne(@Args() args: GetPaginatedSubDocumentsArgs) {
-//   //   const { first, _id } = args;
-//   //   return this.bookService.getBookById(_id, first);
+//   //   const { first, id } = args;
+//   //   return this.bookService.getBookById(id, first);
 //   // }
 
 //   // @Mutation(() => Book)
 //   // @UseGuards(JwtAuthGuard)
 //   // updateBook(@Args('updateBookInput') updateBookInput: UpdateBookInput) {
-//   //   return this.bookService.updateBook(updateBookInput._id, updateBookInput);
+//   //   return this.bookService.updateBook(updateBookInput.id, updateBookInput);
 //   // }
 
 //   // @Mutation(() => Book)

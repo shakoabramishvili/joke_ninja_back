@@ -39,6 +39,6 @@
 //   }
 
 //   remove(id: MongooSchema.Types.ObjectId) {
-//     return this.authorModel.deleteOne({ _id: id });
+//     return this.authorModel.deleteOne({ id: id });
 //   }
 // }

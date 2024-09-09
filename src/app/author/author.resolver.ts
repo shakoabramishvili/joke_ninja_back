@@ -39,7 +39,7 @@
 //     @Args('updateAuthorInput') updateAuthorInput: UpdateAuthorInput,
 //   ) {
 //     return this.authorService.updateAuthor(
-//       updateAuthorInput._id,
+//       updateAuthorInput.id,
 //       updateAuthorInput,
 //     );
 //   }

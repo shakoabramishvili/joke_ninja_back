@@ -9,7 +9,7 @@
 // @Schema()
 // export class Book {
 //   @Field(() => String)
-//   _id: MongooSchema.Types.ObjectId;
+//   id: MongooSchema.Types.ObjectId;
 
 //   // Add user properties
 //   @Field(() => String)

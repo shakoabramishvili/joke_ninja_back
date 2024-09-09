@@ -7,7 +7,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 @Schema()
 export class User {
   @Field(() => ID)
-  _id: MongooSchema.Types.ObjectId;
+  id: MongooSchema.Types.ObjectId;
 
   // Add user properties
   @Field(() => String)

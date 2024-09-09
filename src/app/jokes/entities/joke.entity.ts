@@ -8,7 +8,7 @@ import { Answer } from './answers.entity';
 @Schema()
 export class Joke {
   @Field(() => ID)
-  _id: MongooSchema.Types.ObjectId;
+  id: MongooSchema.Types.ObjectId;
 
   @Field(() => String)
   @Prop()

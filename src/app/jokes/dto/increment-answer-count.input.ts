@@ -6,7 +6,7 @@ import { Schema as MongooSchema } from 'mongoose';
 export class IncrementAnswerCountInput {
   @Field(() => ID)
   @IsMongoId()
-  _id: MongooSchema.Types.ObjectId;
+  id: MongooSchema.Types.ObjectId;
 
   @Field(() => Int)
   @IsInt()

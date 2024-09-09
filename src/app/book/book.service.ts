@@ -47,6 +47,6 @@
 //   }
 
 //   removeBook(id: MongooSchema.Types.ObjectId) {
-//     return this.bookModel.deleteOne({ _id: id });
+//     return this.bookModel.deleteOne({ id: id });
 //   }
 // }

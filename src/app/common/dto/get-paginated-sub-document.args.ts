@@ -7,5 +7,5 @@ export class GetPaginatedSubDocumentsArgs extends PartialType(
   PaginationArgs,
 ) {
   @Field(() => ID)
-  _id: MongooSchema.Types.ObjectId;
+  id: MongooSchema.Types.ObjectId;
 }

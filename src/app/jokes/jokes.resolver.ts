@@ -28,12 +28,12 @@ export class JokesResolver {
 
   @Mutation(() => JokeResponse)
   updateJoke(@Args('updateJokeInput') updateJokeInput: UpdateJokeInput) {
-    return this.jokesService.updateJoke(updateJokeInput._id, updateJokeInput);
+    return this.jokesService.updateJoke(updateJokeInput.id, updateJokeInput);
   }
 
   // @Mutation(() => JokeResponse)
   // incrementAnswerCount(@Args('incrementAnswerCountInput') incrementAnswerCountInput: IncrementAnswerCountInput) {
-  //   return this.jokesService.incrementAnswerCount(incrementAnswerCountInput._id, incrementAnswerCountInput);
+  //   return this.jokesService.incrementAnswerCount(incrementAnswerCountInput.id, incrementAnswerCountInput);
   // }
 
   // @Mutation(() => Joke)

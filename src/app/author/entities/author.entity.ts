@@ -7,7 +7,7 @@
 // @Schema()
 // export class Author {
 //   @Field(() => String)
-//   _id: MongooSchema.Types.ObjectId;
+//   id: MongooSchema.Types.ObjectId;
 
 //   @Field()
 //   @Prop()

@@ -35,7 +35,7 @@ export class AuthService {
         {
           email: user.email,
           name: user.name,
-          sub: user._id,
+          sub: user.id,
         },
         {
           secret: this.configService.get<string>('JWT_SECRET'),

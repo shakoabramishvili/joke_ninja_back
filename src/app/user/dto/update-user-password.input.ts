@@ -6,7 +6,7 @@ import { Schema as MongooSchema } from 'mongoose';
 export class UpdatePasswordInput {
   @Field(() => ID)
   @IsString()
-  _id: MongooSchema.Types.ObjectId;
+  id: MongooSchema.Types.ObjectId;
 
   @Field(() => String)
   @IsStrongPassword({
