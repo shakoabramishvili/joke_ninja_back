@@ -13,6 +13,7 @@ import { CommonModule } from './common/common.module';
 import { AuthModule } from './auth/auth.module';
 import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
 import { JokesModule } from './jokes/jokes.module';
+import { SharedModule } from './shared/shared.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { JokesModule } from './jokes/jokes.module';
     CommonModule,
     AuthModule,
     JokesModule,
+    SharedModule
   ],
   providers: [],
 })

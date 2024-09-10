@@ -4,9 +4,10 @@ import { AuthResolver } from './auth.resolver';
 import { UserModule } from '../user/user.module';
 import { JwtModule, JwtModuleOptions, JwtService } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtStrategy } from './jwt.strategy';
+import { JwtStrategy } from '../shared/strategies/jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
-import { LocalStrategy } from './local.strategy';
+import { LocalStrategy } from '../shared/strategies/local.strategy';
+import { GoogleService } from '../shared/services/google.service';
 
 @Module({
   providers: [
@@ -15,6 +16,7 @@ import { LocalStrategy } from './local.strategy';
     JwtService,
     JwtStrategy,
     LocalStrategy,
+    GoogleService
   ],
   // We nedd to make sure we've imported the userModule, because we're using it's service
   imports: [
@@ -26,10 +28,10 @@ import { LocalStrategy } from './local.strategy';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
         const properties: JwtModuleOptions = {
-          secret: configService.get<string>('JWT_SECRET'),
-          signOptions: {
-            expiresIn: '24h',
-          },
+          // secret: configService.get<string>('JWT_SECRET'),
+          // signOptions: {
+          //   expiresIn: '1m',
+          // },
         };
         return properties;
       },

@@ -6,6 +6,12 @@ import { UpdateJokeInput } from './dto/update-joke.input';
 import { PaginationArgs } from '../common/dto/get-paginated.args';
 import { IncrementAnswerCountInput } from './dto/increment-answer-count.input';
 import { JokeResponse } from './dto/joke-response';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../shared/guards/jwt-auth.gards';
+import { Context } from 'apollo-server-core';
+import { GetUser } from '../shared/decorators/current-user.decorator';
+import { GqlAuthGuard } from '../shared/guards/gql-auth.guards';
+import { User } from '../user/entities/user.entity';
 
 @Resolver(() => Joke)
 export class JokesResolver {
@@ -16,8 +22,10 @@ export class JokesResolver {
     return this.jokesService.create(createJokeInput);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Query(() => PaginatedJokes, { name: 'jokes' })
-  findAllJokes(@Args() args: PaginationArgs) {
+  findAllJokes(@Args() args: PaginationArgs, @GetUser() user: User) {
+    console.log(user, 'in resolver')
     return this.jokesService.findAllJokes(args);
   }
 

@@ -4,10 +4,13 @@
 
 type User {
   id: ID!
-  name: String!
+  name: String
   email: String!
-  password: String!
-  address: String!
+  externalId: String!
+  externalType: String!
+  password: String
+  address: String
+  score: Int!
 }
 
 type LoginUserResponse {
@@ -58,6 +61,7 @@ type Query {
 type Mutation {
   login(loginUserInput: LoginUserInput!): LoginUserResponse!
   signup(signupInput: CreateUserInput!): User!
+  socialAuth(socialAuthInput: SocialAuthInput!): LoginUserResponse!
   createJoke(createJokeInput: CreateJokeInput!): JokeResponse!
   updateJoke(updateJokeInput: UpdateJokeInput!): JokeResponse!
 }
@@ -70,8 +74,23 @@ input LoginUserInput {
 input CreateUserInput {
   name: String!
   email: String!
+  externalId: String!
+  externalType: String!
   password: String!
   address: String!
+}
+
+input SocialAuthInput {
+  method: AuthMethodEnum!
+  accessToken: String!
+  fcmToken: String
+}
+
+"""AuthMethodEnum"""
+enum AuthMethodEnum {
+  GOOGLE
+  FACEBOOK
+  APPLE
 }
 
 input CreateJokeInput {

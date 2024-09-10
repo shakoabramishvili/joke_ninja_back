@@ -29,6 +29,12 @@ export class UserService {
     return this.userModel.findOne({ email });
   }
 
+  async findOneBy(externalId: string, externalType: string) {
+    return this.userModel.findOne({
+      externalId, externalType
+    })
+  }
+
   getUserById(id: MongooSchema.Types.ObjectId) {
     return this.userModel.findById(id);
   }
