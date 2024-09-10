@@ -84,7 +84,7 @@ export class AuthService {
         throw new UnauthorizedException('Invalid social provider');
     }
 
-    if (!userInfo) {
+    if (!userInfo.email_verified) {
       throw new UnauthorizedException();
     }
 
@@ -92,12 +92,29 @@ export class AuthService {
     if (isUser) {
       return this.login(isUser)
     }
+
     const createUserInput: CreateUserInput = {
+      name: userInfo.name,
       email: userInfo.email,
       externalId: userInfo.sub,
       externalType: method
     }
-
+    // {
+    //   iss: 'https://accounts.google.com',
+    //   azp: '365786239682-fl96r6oml4rhr5srqb41mo3fdlirci36.apps.googleusercontent.com',
+    //   aud: '365786239682-fl96r6oml4rhr5srqb41mo3fdlirci36.apps.googleusercontent.com',
+    //   sub: '114553777137044764933',
+    //   hd: 'gtu.ge',
+    //   email: 'zedelashvili_le@gtu.ge',
+    //   email_verified: true,
+    //   at_hash: '_u3wwmG_5PXoMH5LcG7qYw',
+    //   nonce: 'e8F5Qqq5O9gjYFQitYa-ZbSqoxGpWnzuBHwG6imPIt0',
+    //   name: 'Levani Zedelashvili',
+    //   given_name: 'Levani',
+    //   family_name: 'Zedelashvili',
+    //   iat: 1725976107,
+    //   exp: 1725979707
+    // }
     const user = await this.userService.createUser(createUserInput)
     return this.login(user)
   }
