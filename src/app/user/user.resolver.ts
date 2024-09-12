@@ -4,6 +4,8 @@ import { User } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { Schema as MongooSchema } from 'mongoose';
+import { JwtAuthGuard } from '../shared/guards/jwt-auth.gards';
+import { UseGuards } from '@nestjs/common';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -19,6 +21,7 @@ export class UserResolver {
     return this.userService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Query(() => User, {})
   getUserById(
     @Args('id', { type: () => ID }) id: MongooSchema.Types.ObjectId,
