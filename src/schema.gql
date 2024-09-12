@@ -27,8 +27,15 @@ type PageInfo {
 
 type Answer {
   text: String!
-  canBeBest: Boolean!
+  funnyRank: FunnyRank!
   clickCount: Int!
+}
+
+"""FunnyRank"""
+enum FunnyRank {
+  WORST
+  GOOD
+  BEST
 }
 
 type Joke {
@@ -50,6 +57,7 @@ type JokeEdge {
 
 type JokeResponse {
   joke: Joke!
+  userScored: Int!
 }
 
 type Query {

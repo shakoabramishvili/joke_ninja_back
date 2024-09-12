@@ -9,4 +9,4 @@ export enum AuthMethodEnum {
 registerEnumType(AuthMethodEnum, {
     name: "AuthMethodEnum",
     description: "AuthMethodEnum",
-  });
+});

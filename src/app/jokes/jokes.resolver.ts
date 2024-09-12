@@ -34,15 +34,11 @@ export class JokesResolver {
   //   return this.jokesService.findOne(id);
   // }
 
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => JokeResponse)
-  updateJoke(@Args('updateJokeInput') updateJokeInput: UpdateJokeInput) {
-    return this.jokesService.updateJoke(updateJokeInput.id, updateJokeInput);
+  updateJoke(@Args('updateJokeInput') updateJokeInput: UpdateJokeInput, @GetUser() user: User) {
+    return this.jokesService.updateJoke(updateJokeInput.id, updateJokeInput, user);
   }
-
-  // @Mutation(() => JokeResponse)
-  // incrementAnswerCount(@Args('incrementAnswerCountInput') incrementAnswerCountInput: IncrementAnswerCountInput) {
-  //   return this.jokesService.incrementAnswerCount(incrementAnswerCountInput.id, incrementAnswerCountInput);
-  // }
 
   // @Mutation(() => Joke)
   // removeJoke(@Args('id', { type: () => Int }) id: number) {
