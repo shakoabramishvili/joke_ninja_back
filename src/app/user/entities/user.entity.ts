@@ -9,7 +9,6 @@ export class User {
   @Field(() => ID)
   id: MongooSchema.Types.ObjectId;
 
-  // Add user properties
   @Field(() => String, { nullable: true })
   @Prop()
   name: string;
@@ -26,21 +25,9 @@ export class User {
   @Prop()
   externalType: string
 
-  @Field(() => String, {  nullable: true})
-  @Prop()
-  password: string;
-
-  @Field(() => String, { nullable: true })
-  @Prop()
-  address: string;
-
   @Field(() => Int, { defaultValue: 0 })
   @Prop()
   score: number
-
-  // @Field(() => [Book])
-  // @Prop({ type: [{ type: MongooSchema.Types.ObjectId, ref: 'Book' }] })
-  // books: Book[];
 }
 
 @ObjectType()

@@ -8,8 +8,6 @@ type User {
   email: String!
   externalId: String!
   externalType: String!
-  password: String
-  address: String
   score: Int!
 }
 
@@ -63,6 +61,7 @@ type JokeResponse {
 type Query {
   users: [User!]!
   getUserById(id: ID!): User!
+  getCurrentUser: User!
   jokes(first: Int, after: String, last: Int, before: String): PaginatedJokes!
 }
 

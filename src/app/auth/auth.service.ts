@@ -9,6 +9,7 @@ import { LoginUserInput } from './dto/login-user.input';
 import { SocialAuthInput } from './dto/social-auth.input';
 import { GoogleService } from '../shared/services/google.service';
 import { AuthMethodEnum } from '../shared/enum/authMethod.enum';
+import { use } from 'passport';
 
 @Injectable()
 export class AuthService {
@@ -19,27 +20,30 @@ export class AuthService {
     private googleService: GoogleService,
   ) {}
 
-  async validateUser(loginUserInput: LoginUserInput) {
-    const { email, password } = loginUserInput;
-    const user = await this.userService.findOneByEmail(email);
+  // async validateUser(loginUserInput: LoginUserInput) {
+  //   const { email, password } = loginUserInput;
+  //   const user = await this.userService.findOneByEmail(email);
 
-    const isMatch = await bcrypt.compare(password, user?.password);
+  //   const isMatch = await bcrypt.compare(password, user?.password);
 
-    if (user && isMatch) {
-      return user;
-    }
+  //   if (user && isMatch) {
+  //     return user;
+  //   }
 
-    return null;
-  }
+  //   return null;
+  // }
 
   login(user: User) {
     return {
       user,
       authToken: this.jwtService.sign(
         {
-          email: user.email,
-          name: user.name,
           sub: user.id,
+          name: user.name,
+          email: user.email,
+          externalId: user.externalId,
+          externalType: user.externalType,
+          score: user.score
         },
         {
           secret: this.configService.get<string>('JWT_SECRET'),
