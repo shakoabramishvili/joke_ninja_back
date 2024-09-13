@@ -29,7 +29,7 @@ export class User {
   @Prop()
   score: number
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Prop()
   picture: string
 }

@@ -9,7 +9,7 @@ type User {
   externalId: String!
   externalType: String!
   score: Int!
-  picture: String!
+  picture: String
 }
 
 type LoginUserResponse {
