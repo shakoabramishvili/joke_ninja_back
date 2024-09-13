@@ -121,8 +121,9 @@ export class AuthService {
       externalType: method,
       picture: userInfo.picture
     }
-    
+
     const user = await this.userService.createUser(createUserInput)
     return this.login(user)
   }
 }
+//comment for push
