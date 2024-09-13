@@ -25,7 +25,7 @@ jobs:
         port: 22
         script: |
           echo "SSH connection successful"
-          cd /home/ubuntu/joke_ninja_back  # Update this path as necessary
+          cd joke_ninja_back  # Update this path as necessary
           git pull origin dev
           yarn install
           yarn build
