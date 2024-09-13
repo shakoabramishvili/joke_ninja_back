@@ -14,7 +14,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3  # Use the latest version for compatibility
 
     - name: Deploy to EC2 via SSH
       uses: appleboy/ssh-action@v0.1.3
