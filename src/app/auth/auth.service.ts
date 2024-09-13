@@ -10,6 +10,7 @@ import { SocialAuthInput } from './dto/social-auth.input';
 import { GoogleService } from '../shared/services/google.service';
 import { AuthMethodEnum } from '../shared/enum/authMethod.enum';
 import { use } from 'passport';
+import { UpdateUserInput } from '../user/dto/update-user.input';
 
 @Injectable()
 export class AuthService {
@@ -94,6 +95,22 @@ export class AuthService {
 
     const isUser = await this.userService.findOneBy(userInfo.sub, method);
     if (isUser) {
+      const updateFields: UpdateUserInput = {
+        id: isUser.id
+      };
+      if (isUser.name !== userInfo.name) {
+        updateFields.name = userInfo.name;
+      }
+      if (isUser.email !== userInfo.email) {
+        updateFields.email = userInfo.email;
+      }
+      if (isUser.picture !== userInfo.picture) {
+        updateFields.picture = userInfo.picture;
+      }
+    
+      if (Object.keys(updateFields).length > 0) {
+        await this.userService.updateUser(isUser.id, updateFields);
+      }
       return this.login(isUser)
     }
 
@@ -104,22 +121,7 @@ export class AuthService {
       externalType: method,
       picture: userInfo.picture
     }
-    // {
-    //   iss: 'https://accounts.google.com',
-    //   azp: '365786239682-fl96r6oml4rhr5srqb41mo3fdlirci36.apps.googleusercontent.com',
-    //   aud: '365786239682-fl96r6oml4rhr5srqb41mo3fdlirci36.apps.googleusercontent.com',
-    //   sub: '114553777137044764933',
-    //   hd: 'gtu.ge',
-    //   email: 'zedelashvili_le@gtu.ge',
-    //   email_verified: true,
-    //   at_hash: '_u3wwmG_5PXoMH5LcG7qYw',
-    //   nonce: 'e8F5Qqq5O9gjYFQitYa-ZbSqoxGpWnzuBHwG6imPIt0',
-    //   name: 'Levani Zedelashvili',
-    //   given_name: 'Levani',
-    //   family_name: 'Zedelashvili',
-    //   iat: 1725976107,
-    //   exp: 1725979707
-    // }
+    
     const user = await this.userService.createUser(createUserInput)
     return this.login(user)
   }
