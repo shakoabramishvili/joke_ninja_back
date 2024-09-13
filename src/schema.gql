@@ -9,6 +9,7 @@ type User {
   externalId: String!
   externalType: String!
   score: Int!
+  picture: String!
 }
 
 type LoginUserResponse {
@@ -83,8 +84,7 @@ input CreateUserInput {
   email: String!
   externalId: String!
   externalType: String!
-  password: String!
-  address: String!
+  picture: String!
 }
 
 input SocialAuthInput {

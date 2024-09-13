@@ -55,19 +55,19 @@ export class AuthService {
 
   async signup(payload: CreateUserInput) {
     // CHECK IF THE USER ALREADY EXISTS
-    const user = await this.userService.findOneByEmail(payload.email);
+    // const user = await this.userService.findOneByEmail(payload.email);
 
-    if (user) {
-      throw new Error('User already exists, login instead');
-    }
+    // if (user) {
+    //   throw new Error('User already exists, login instead');
+    // }
 
-    // GENERATE HASH PASSWORD TO SAVE
-    const hash = await bcrypt.hash(
-      payload.password,
-      Number(this.configService.get<string>('SALT_ROUND')),
-    );
+    // // GENERATE HASH PASSWORD TO SAVE
+    // const hash = await bcrypt.hash(
+    //   payload.password,
+    //   Number(this.configService.get<string>('SALT_ROUND')),
+    // );
 
-    return this.userService.createUser({ ...payload, password: hash });
+    // return this.userService.createUser({ ...payload, password: hash });
   }
 
   async socialAuth(socialAuthInput: SocialAuthInput) {
@@ -101,7 +101,8 @@ export class AuthService {
       name: userInfo.name,
       email: userInfo.email,
       externalId: userInfo.sub,
-      externalType: method
+      externalType: method,
+      picture: userInfo.picture
     }
     // {
     //   iss: 'https://accounts.google.com',

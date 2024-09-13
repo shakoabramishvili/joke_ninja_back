@@ -25,17 +25,5 @@ export class CreateUserInput {
   externalType: string;
 
   @Field(() => String)
-  // @IsStrongPassword({
-  //   minLength: 6,
-  //   minLowercase: 1,
-  //   minNumbers: 1,
-  //   minSymbols: 1,
-  //   minUppercase: 1,
-  // })
-  @IsOptional()
-  password?: string;
-
-  @Field(() => String)
-  @IsOptional()
-  address?: string;
+  picture: string;
 }

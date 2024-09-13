@@ -28,6 +28,10 @@ export class User {
   @Field(() => Int, { defaultValue: 0 })
   @Prop()
   score: number
+
+  @Field(() => String)
+  @Prop()
+  picture: string
 }
 
 @ObjectType()
