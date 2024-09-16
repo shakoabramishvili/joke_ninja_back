@@ -129,3 +129,4 @@ export class AuthService {
 //comment for push
 //comment for push
 //comment for push
+// git pull --rebase origin dev
