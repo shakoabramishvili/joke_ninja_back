@@ -28,10 +28,10 @@ export class JokesResolver {
     return this.jokesService.findAllJokes(args);
   }
 
-  // @Query(() => Joke, { name: 'joke' })
-  // findOne(@Args('id', { type: () => Int }) id: number) {
-  //   return this.jokesService.findOne(id);
-  // }
+  @Query(() => Joke, { name: 'joke' })
+  findOne(@Args('id', { type: () => Int }) id: number) {
+    return this.jokesService.findOne(id);
+  }
 
   @UseGuards(JwtAuthGuard)
   @Mutation(() => JokeResponse)
