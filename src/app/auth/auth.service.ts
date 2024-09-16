@@ -126,7 +126,3 @@ export class AuthService {
     return this.login(user)
   }
 }
-//comment for push
-//comment for push
-//comment for push
-// git pull --rebase origin dev
