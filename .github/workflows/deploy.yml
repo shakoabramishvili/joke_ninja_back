@@ -1,32 +1,32 @@
-name: Deploy to EC2
+# name: Deploy to EC2
 
-on:
-  push:
-    branches:
-      - dev  # Trigger on the 'dev' branch or other branches as needed
-  pull_request:
-    branches:
-      - dev
+# on:
+#   push:
+#     branches:
+#       - dev  # Trigger on the 'dev' branch or other branches as needed
+#   pull_request:
+#     branches:
+#       - dev
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4 # Use the latest version for compatibility
+#     steps:
+#     - name: Checkout repository
+#       uses: actions/checkout@v4 # Use the latest version for compatibility
 
-    - name: Deploy to EC2 via SSH
-      uses: appleboy/ssh-action@v0.1.6
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USER }}
-        key: ${{ secrets.EC2_SSH_KEY }}
-        port: 22
-        script: |
-          echo "SSH connection successful"
-          cd joke_ninja_back  # Update this path as necessary
-          git pull origin dev
-          yarn install
-          yarn build
-          pm2 restart all  # Restart the app using PM2 (or other process manager)
+#     - name: Deploy to EC2 via SSH
+#       uses: appleboy/ssh-action@v0.1.6
+#       with:
+#         host: ${{ secrets.EC2_HOST }}
+#         username: ${{ secrets.EC2_USER }}
+#         key: ${{ secrets.EC2_SSH_KEY }}
+#         port: 22
+#         script: |
+#           echo "SSH connection successful"
+#           cd joke_ninja_back  # Update this path as necessary
+#           git pull origin dev
+#           yarn install
+#           yarn build
+#           pm2 restart all  # Restart the app using PM2 (or other process manager)
