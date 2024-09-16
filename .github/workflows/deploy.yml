@@ -26,7 +26,8 @@ jobs:
         script: |
           echo "SSH connection successful"
           cd joke_ninja_back  # Update this path as necessary
+          export PATH=$PATH:/home/ubuntu/.nvm/versions/node/v20.17.0/bin  # Add yarn and pm2 to PATH
           git pull origin dev
-          yarn install
-          yarn build
-          pm2 restart all  # Restart the app using PM2 (or other process manager)
+          /home/ubuntu/.nvm/versions/node/v20.17.0/bin/yarn install
+          /home/ubuntu/.nvm/versions/node/v20.17.0/bin/yarn build
+          /home/ubuntu/.nvm/versions/node/v20.17.0/bin/pm2 restart all  # Restart the app using PM2
