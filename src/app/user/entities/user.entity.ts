@@ -30,6 +30,10 @@ export class User {
   @Prop()
   score: number
 
+  @Field(() => Int, { defaultValue: 0 })
+  @Prop()
+  rank: number
+
   @Field(() => String, { nullable: true })
   @Prop()
   picture: string

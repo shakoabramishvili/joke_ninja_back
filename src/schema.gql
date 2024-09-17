@@ -16,6 +16,7 @@ type User {
   externalId: String!
   externalType: String!
   score: Int!
+  rank: Int!
   picture: String
 }
 

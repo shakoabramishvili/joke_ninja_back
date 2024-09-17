@@ -38,8 +38,11 @@ export class UserService {
     })
   }
 
-  getUserById(id: MongooSchema.Types.ObjectId) {
-    return this.userModel.findById(id);
+  async getUserById(id: MongooSchema.Types.ObjectId) {
+    const currentUser = await this.userModel.findById(id);
+    const userRank = await this.userModel.countDocuments({ score: { $gt: currentUser.score } }) + 1;
+    currentUser.rank = userRank
+    return currentUser
   }
 
   updateUser(

@@ -53,13 +53,16 @@ export class JokesService {
         { $inc: { [`score`]: joke.answers[answerIndex].funnyRank}}
       )
     }
-    
+    const currentUser = await this.userModel.findById(user.id);
+    const userRank = await this.userModel.countDocuments({ score: { $gt: currentUser.score } }) + 1;
     const updatedJoke = await this.jokeModel.findById(
       id, 
     );
+    
     return { 
       joke: updatedJoke, 
-      userScored: joke.answers[answerIndex].funnyRank 
+      userScored: joke.answers[answerIndex].funnyRank,
+      userRank
     };
   }  
 
