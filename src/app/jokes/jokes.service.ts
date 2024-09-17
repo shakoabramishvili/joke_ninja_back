@@ -7,6 +7,8 @@ import { Model, Schema as MongooSchema } from 'mongoose';
 import { PaginationService } from '../common/pagination.service';
 import { PaginationArgs } from '../common/dto/get-paginated.args';
 import { User, UserDocument } from '../user/entities/user.entity';
+import { OpenAIService } from '../shared/services/openai.service';
+import { RedisCacheService } from '../shared/services/redis.service';
 
 @Injectable()
 export class JokesService {
@@ -16,6 +18,8 @@ export class JokesService {
     @InjectModel(User.name)
     private userModel: Model<UserDocument>,
     private readonly paginationService: PaginationService,
+    private readonly openaiService: OpenAIService,
+    private readonly redisCacheService: RedisCacheService
   ) {}
   create(createJokeInput: CreateJokeInput) {
     const createJoke = new this.jokeModel(createJokeInput)
@@ -23,6 +27,9 @@ export class JokesService {
   }
 
   async findAllJokes(pagination: PaginationArgs) {
+    // const ai = await this.openaiService.main()
+    const leaderBoard = await this.redisCacheService.getMembersWithScores('leaderboard', 0 , 5)
+    console.log(leaderBoard)
     return await this.paginationService.paginate(this.jokeModel, pagination)
   }
 
@@ -57,6 +64,34 @@ export class JokesService {
     const updatedJoke = await this.jokeModel.findById(
       id, 
     );
+    const updatedUser = await this.userModel.findById(
+      {_id: user.id}
+    )
+    // {
+    //   _id: new ObjectId("66e2e13d173f6828f01a27fe"),
+    //   question: 'What did the vampire say to the comedian?',
+    //   answers: [
+    //     {
+    //       text: '“You really know how to make my blood boil.”',
+    //       funnyRank: 2,
+    //       clickCount: 1
+    //     },
+    //     {
+    //       text: '“I’m dying for a good laugh, but not literally!”',
+    //       funnyRank: -1,
+    //       clickCount: 0
+    //     },
+    //     {
+    //       text: '“Your jokes are just the ‘bite’ I needed.”',
+    //       funnyRank: 1,
+    //       clickCount: 0
+    //     }
+    //   ],
+    //   coverImage: 'https://jokeninja.s3.eu-central-1.amazonaws.com/jokes/0d65cbbb-c5cf-4b8a-8749-cb8d667268fa.png'
+    // }
+    
+    // console.log(updatedJoke)
+    await this.redisCacheService.addMemberToSortedSet('leaderboard', updatedUser.score, updatedUser.name)
     return { 
       joke: updatedJoke, 
       userScored: joke.answers[answerIndex].funnyRank 

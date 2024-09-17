@@ -2,6 +2,9 @@ import { Global, Module } from "@nestjs/common";
 import { FirebaseModule } from "nestjs-firebase";
 import * as path from 'path';
 import { GoogleService } from "./services/google.service";
+import { OpenAIService } from "./services/openai.service";
+import { redisProvider } from "./providers/redis.provider";
+import { RedisCacheService } from "./services/redis.service";
 
 @Global()
 @Module({
@@ -16,7 +19,15 @@ import { GoogleService } from "./services/google.service";
             ),
           }),
     ],
-    providers: [GoogleService],
-    exports: []
+    providers: [
+      GoogleService, 
+      OpenAIService, 
+      redisProvider, 
+      RedisCacheService
+    ],
+    exports: [
+      OpenAIService, 
+      RedisCacheService
+    ]
 })
 export class SharedModule {}

@@ -6,6 +6,7 @@ import { Joke, JokeSchema } from './entities/joke.entity';
 import { CommonModule } from '../common/common.module';
 import { UserModule } from '../user/user.module';
 import { User, UserSchema } from '../user/entities/user.entity';
+import { SharedModule } from '../shared/shared.module';
 
 @Module({
   providers: [JokesResolver, JokesService],
@@ -14,7 +15,8 @@ import { User, UserSchema } from '../user/entities/user.entity';
       { name: Joke.name, schema: JokeSchema }, 
       {name: User.name, schema: UserSchema}
     ]),
-    CommonModule
+    CommonModule,
+    SharedModule
   ]
 })
 export class JokesModule {}

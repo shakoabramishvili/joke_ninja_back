@@ -64,7 +64,6 @@ type Query {
   getUserById(id: ID!): User!
   getCurrentUser: User!
   jokes(first: Int, after: String, last: Int, before: String): PaginatedJokes!
-  joke(id: Int!): Joke!
 }
 
 type Mutation {
