@@ -18,7 +18,7 @@ export class Joke {
   @Prop()
   answers: Answer[];
 
-  @Field(() => String, {nullable: true})
+  @Field(() => String, { nullable: true })
   @Prop()
   coverImage: string;
 }

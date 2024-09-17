@@ -1,12 +1,14 @@
 import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
 import { UserService } from './user.service';
-import { User } from './entities/user.entity';
+import { PaginatedUsers, User } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { Schema as MongooSchema } from 'mongoose';
 import { JwtAuthGuard } from '../shared/guards/jwt-auth.gards';
 import { UseGuards } from '@nestjs/common';
 import { GetUser } from '../shared/decorators/current-user.decorator';
+import { PaginationArgs } from '../common/dto/get-paginated.args';
+import { LeaderboardResponse } from './dto/leaderboard-response';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -36,6 +38,14 @@ export class UserResolver {
     @GetUser() user: User
   ) {
     return this.userService.getUserById(user.id);
+  }
+  @UseGuards(JwtAuthGuard)
+  @Query(() => LeaderboardResponse, {name: 'leaderboard'})
+  getUserLeaderboard(
+    @Args('limit', { type: () => Int }) limit: number,
+    @GetUser() user: User
+  ) {
+    return this.userService.getUserLeaderboard(limit, user);
   }
 
   // @Mutation(() => User)

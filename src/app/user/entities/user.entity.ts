@@ -1,6 +1,7 @@
 import { ObjectType, Field, ID, Int } from '@nestjs/graphql';
 import { Document, Schema as MongooSchema } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Paginated } from 'src/app/common/dto/pagination-result.type';
 // import { Book } from 'src/app/book/entities/book.entity';
 
 @ObjectType()
@@ -42,6 +43,9 @@ export class LoginUserResponseR {
   @Field(() => String)
   authToken: string;
 }
+
+@ObjectType()
+export class PaginatedUsers extends Paginated(User) { }
 
 export type UserDocument = User & Document;
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -5,6 +5,8 @@ import { Model, Schema as MongooSchema } from 'mongoose';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { User, UserDocument } from './entities/user.entity';
+import { PaginationArgs } from '../common/dto/get-paginated.args';
+import { PaginationService } from '../common/pagination.service';
 
 @Injectable()
 export class UserService {
@@ -12,6 +14,7 @@ export class UserService {
     @InjectModel(User.name)
     private userModel: Model<UserDocument>,
     private readonly configService: ConfigService,
+    private readonly paginationService: PaginationService,
   ) {}
 
   async createUser(createUserInput: CreateUserInput) {
@@ -48,5 +51,17 @@ export class UserService {
 
   remove(id: MongooSchema.Types.ObjectId) {
     return this.userModel.deleteOne({ id: id });
+  }
+
+  async getUserLeaderboard(limit: number, user: User) {
+    const users = await this.userModel.find().sort({ score: -1 }).limit(limit);
+
+    const currentUser = await this.userModel.findOne({ _id: user.id }, { score: 1 });
+    const userRank = await this.userModel.countDocuments({ score: { $gt: currentUser.score } }) + 1;
+
+    return {
+      users,
+      currentUserRank: userRank,
+    };
   }
 }

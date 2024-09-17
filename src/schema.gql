@@ -2,6 +2,13 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type PageInfo {
+  hasNextPage: Boolean!
+  endCursor: String!
+  hasPreviousPage: Boolean!
+  startCursor: String!
+}
+
 type User {
   id: ID!
   name: String
@@ -12,16 +19,14 @@ type User {
   picture: String
 }
 
+type LeaderboardResponse {
+  users: [User!]!
+  currentUserRank: Int!
+}
+
 type LoginUserResponse {
   user: User!
   authToken: String!
-}
-
-type PageInfo {
-  hasNextPage: Boolean!
-  endCursor: String!
-  hasPreviousPage: Boolean!
-  startCursor: String!
 }
 
 type Answer {
@@ -63,6 +68,7 @@ type Query {
   users: [User!]!
   getUserById(id: ID!): User!
   getCurrentUser: User!
+  leaderboard(limit: Int!): LeaderboardResponse!
   jokes(first: Int, after: String, last: Int, before: String): PaginatedJokes!
   joke(id: Int!): Joke!
 }
