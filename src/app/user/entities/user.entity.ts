@@ -5,7 +5,7 @@ import { Paginated } from 'src/app/common/dto/pagination-result.type';
 // import { Book } from 'src/app/book/entities/book.entity';
 
 @ObjectType()
-@Schema()
+@Schema({ timestamps: true })
 export class User {
   @Field(() => ID)
   id: MongooSchema.Types.ObjectId;
@@ -37,6 +37,18 @@ export class User {
   @Field(() => String, { nullable: true })
   @Prop()
   picture: string
+
+  @Field(() => Date)
+  @Prop({ default: Date.now })
+  createdAt: Date;
+
+  @Field(() => Date)
+  @Prop({ default: Date.now })
+  updatedAt: Date;
+
+  @Field(() => Date, { nullable: true })
+  @Prop()
+  deletedAt?: Date;
 }
 
 @ObjectType()

@@ -7,6 +7,7 @@ import { Model, Schema as MongooSchema } from 'mongoose';
 import { PaginationService } from '../common/pagination.service';
 import { PaginationArgs } from '../common/dto/get-paginated.args';
 import { User, UserDocument } from '../user/entities/user.entity';
+import { AnsweredJoke, AnsweredJokeDocument, AnsweredJokeSchema } from './entities/answeredJoke.entity';
 
 @Injectable()
 export class JokesService {
@@ -15,6 +16,8 @@ export class JokesService {
     private jokeModel: Model<JokeDocument>,
     @InjectModel(User.name)
     private userModel: Model<UserDocument>,
+    @InjectModel(AnsweredJoke.name)
+    private answeredJokeModel: Model<AnsweredJokeDocument>,
     private readonly paginationService: PaginationService,
   ) {}
   create(createJokeInput: CreateJokeInput) {
@@ -22,8 +25,14 @@ export class JokesService {
     return createJoke.save();
   }
 
-  async findAllJokes(pagination: PaginationArgs) {
-    return await this.paginationService.paginate(this.jokeModel, pagination)
+  async findAllJokes(pagination: PaginationArgs, user: User) {
+    const answeredJokesId = await this.getAnsweredJokesByUserId(user.id)
+
+    const notInJokes = this.jokeModel.find({
+      _id: { $nin: answeredJokesId },
+    });
+    
+    return await this.paginationService.paginate(notInJokes, pagination)
   }
 
   findOne(id: number) {
@@ -59,12 +68,27 @@ export class JokesService {
       id, 
     );
     
+    const answeredJoke = new this.answeredJokeModel({
+      userId: user.id,
+      jokeId: updatedJoke.id,
+    });
+    await answeredJoke.save();
+
     return { 
       joke: updatedJoke, 
       userScored: joke.answers[answerIndex].funnyRank,
       userRank
     };
   }  
+
+  async getAnsweredJokesByUserId(userId: MongooSchema.Types.ObjectId): Promise<String[]> {
+    const answeredJokes = await this.answeredJokeModel
+      .find({ userId })
+      .select('jokeId')
+      .lean()
+      .exec();
+      return answeredJokes.map(aq => aq.jokeId.toString());
+  }
 
   remove(id: number) {
     return `This action removes a #${id} joke`;

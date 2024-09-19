@@ -5,7 +5,7 @@ import { Paginated } from 'src/app/common/dto/pagination-result.type';
 import { Answer } from './answers.entity';
 
 @ObjectType()
-@Schema()
+@Schema({ timestamps: true })
 export class Joke {
   @Field(() => ID)
   id: MongooSchema.Types.ObjectId;
@@ -21,6 +21,18 @@ export class Joke {
   @Field(() => String, { nullable: true })
   @Prop()
   coverImage: string;
+
+  @Field(() => Date)
+  @Prop({ default: Date.now })
+  createdAt: Date;
+
+  @Field(() => Date)
+  @Prop({ default: Date.now })
+  updatedAt: Date;
+
+  @Field(() => Date, { nullable: true })
+  @Prop()
+  deletedAt?: Date;
 }
 
 @ObjectType()

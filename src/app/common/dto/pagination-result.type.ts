@@ -20,18 +20,18 @@ export class Edge<T> { //need
 }
   
 @ObjectType()
-export class PageInfo { //need
+export class PageInfo {
     @Field(() => Boolean)
     hasNextPage: boolean;
 
-    @Field(() => String)
-    endCursor: string;
+    @Field(() => String, { nullable: true })
+    endCursor?: string;
 
     @Field(() => Boolean)
     hasPreviousPage: boolean;
 
-    @Field(() => String)
-    startCursor: string;
+    @Field(() => String, { nullable: true })
+    startCursor?: string;
 }
 
 export function Paginated<T>(classRef: Type<T>): any { //need
