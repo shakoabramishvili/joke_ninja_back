@@ -27,7 +27,7 @@ export class User {
   externalType: string
 
   @Field(() => Int, { defaultValue: 0 })
-  @Prop()
+  @Prop({ default: 0 })
   score: number
 
   @Field(() => Int, { defaultValue: 0 })

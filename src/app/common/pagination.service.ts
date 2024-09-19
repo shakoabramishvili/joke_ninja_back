@@ -23,7 +23,7 @@ export class PaginationService {
         if (after) {
             const lastDocument = await model.findById(after).exec();
             if (lastDocument) {
-                query = query.where('id').gt(lastDocument.id as any);
+                query = query.where('_id').gt(lastDocument.id as any);
             }
         }
      
@@ -31,7 +31,7 @@ export class PaginationService {
             const firstDocument = await model.findById(before).exec();
             console.log(firstDocument, 'firstDocument')
             if (firstDocument) {
-                query = query.where('id').lt(firstDocument.id as any);
+                query = query.where('_id').lt(firstDocument.id as any);
             }
         }
         query = query.limit(limit);
@@ -42,10 +42,10 @@ export class PaginationService {
         const endCursor = results.length ? results[results.length - 1].id.toString() : null
 
         const beforeQuery = model.find();
-        const beforeCount = await beforeQuery.where('id').lt(startCursor as any).count().exec();
+        const beforeCount = await beforeQuery.where('_id').lt(startCursor as any).count().exec();
 
         const afterQuery = model.find();
-        const afterCount = await afterQuery.where('id').gt(endCursor as any).count().exec();
+        const afterCount = await afterQuery.where('_id').gt(endCursor as any).count().exec();
 
         const edges: Edge<T>[] = results.map((doc) => ({
             node: doc,
