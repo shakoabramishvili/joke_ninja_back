@@ -33,4 +33,4 @@ jobs:
           git pull origin dev
           yarn install
           yarn build
-          pm2 start ecosystem.config.js --env production  # Use ecosystem.config.js to start the app
+          pm2 start ecosystem.config.js --env development  # Use ecosystem.config.js to start the app
