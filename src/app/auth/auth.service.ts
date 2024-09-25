@@ -35,7 +35,6 @@ export class AuthService {
   // }
 
   login(user: User) {
-    
     return {
       user,
       authToken: this.jwtService.sign(

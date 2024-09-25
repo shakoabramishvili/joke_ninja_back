@@ -30,4 +30,4 @@ jobs:
           git pull origin dev
           /home/ubuntu/.nvm/versions/node/v20.17.0/bin/yarn install
           /home/ubuntu/.nvm/versions/node/v20.17.0/bin/yarn build
-          /home/ubuntu/.nvm/versions/node/v20.17.0/bin/pm2 restart all  # Restart the app using PM2
+          /home/ubuntu/.nvm/versions/node/v20.17.0/bin/pm2 start ecosystem.config.js --env production  # Use ecosystem.config.js to start the app
