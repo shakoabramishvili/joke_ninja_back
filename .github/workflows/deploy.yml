@@ -26,8 +26,11 @@ jobs:
         script: |
           echo "SSH connection successful"
           cd joke_ninja_back  # Update this path as necessary
-          export PATH=$PATH:/home/ubuntu/.nvm/versions/node/v20.17.0/bin  # Add yarn and pm2 to PATH
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # Load nvm
+          nvm use 20.17.0 # Use the specific Node.js version
+          export PATH=$PATH:$NVM_DIR/versions/node/v20.17.0/bin  # Ensure correct PATH
           git pull origin dev
-          /home/ubuntu/.nvm/versions/node/v20.17.0/bin/yarn install
-          /home/ubuntu/.nvm/versions/node/v20.17.0/bin/yarn build
-          /home/ubuntu/.nvm/versions/node/v20.17.0/bin/pm2 start ecosystem.config.js --env production  # Use ecosystem.config.js to start the app
+          yarn install
+          yarn build
+          pm2 start ecosystem.config.js --env production  # Use ecosystem.config.js to start the app
