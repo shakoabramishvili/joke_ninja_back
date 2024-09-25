@@ -39,7 +39,7 @@ import { SharedModule } from './shared/shared.module';
         const databaseName = encodeURIComponent(configService.get<string>('MONGODB_DATABASE_NAME'))
         const uri = configService.get<string>('MONGODB_URI');
         const options: MongooseModuleOptions = {
-          uri: `mongodb://${username}:${password}@${uri}/${databaseName}`,
+          uri: `mongodb+srv://${username}:${password}@${uri}/${databaseName}`,
         };
         return options;
       },
