@@ -41,7 +41,9 @@ import { SharedModule } from './shared/shared.module';
         const options: MongooseModuleOptions = {
           uri: `mongodb+srv://${username}:${password}@${uri}/${databaseName}`,
         };
+        console.log('MongooseModuleOptions',configService)
         return options;
+        
       },
     }),
     ConfigModule.forRoot({
