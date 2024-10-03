@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { OAuth2Client } from "google-auth-library";
+import axios from 'axios';
 
 @Injectable()
 export class GoogleService {
@@ -12,6 +13,16 @@ export class GoogleService {
           );
         }
       }
+
+    async verifyTokenForWeb(accessToken) {
+      try {
+        const response = await this.client.getTokenInfo(accessToken);
+        return response
+      } catch (error) {
+        console.error('Error validating access token:', error);
+      }
+      return false;
+    }
 
     async verifyToken(token: string) {
         try {

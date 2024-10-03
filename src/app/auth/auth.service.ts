@@ -79,6 +79,9 @@ export class AuthService {
       case AuthMethodEnum.GOOGLE:
         userInfo = await this.googleService.verifyToken(accessToken);
         break;
+      case AuthMethodEnum.GOOGLEWEB:
+        userInfo = await this.googleService.verifyTokenForWeb(accessToken);
+        break;
       case AuthMethodEnum.FACEBOOK:
         userInfo = false
         break;

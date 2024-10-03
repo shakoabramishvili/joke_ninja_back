@@ -3,7 +3,8 @@ import { registerEnumType } from "@nestjs/graphql";
 export enum AuthMethodEnum {
     GOOGLE = 'google',
     FACEBOOK = 'facebook',
-    APPLE = 'apple'
+    APPLE = 'apple',
+    GOOGLEWEB = 'googleweb'
 }
 
 registerEnumType(AuthMethodEnum, {
