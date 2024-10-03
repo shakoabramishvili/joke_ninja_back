@@ -32,9 +32,9 @@ export class UserService {
     return this.userModel.findOne({ email });
   }
 
-  async findOneBy(externalId: string, externalType: string) {
+  async findOneBy(externalId: string) {
     return this.userModel.findOne({
-      externalId, externalType
+      externalId
     })
   }
 

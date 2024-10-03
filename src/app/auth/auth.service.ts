@@ -96,7 +96,7 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const isUser = await this.userService.findOneBy(userInfo.sub, method);
+    const isUser = await this.userService.findOneBy(userInfo.sub);
     if (isUser) {
       const updateFields: UpdateUserInput = {
         id: isUser.id
