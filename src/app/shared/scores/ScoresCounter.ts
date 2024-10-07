@@ -1,4 +1,4 @@
-import { Answer } from 'src/app/jokes/entities/answers.entity';
+import { Answer } from '../../jokes/entities/answers.entity';
 
 /**
  *

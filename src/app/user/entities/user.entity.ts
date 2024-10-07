@@ -1,7 +1,7 @@
 import { ObjectType, Field, ID, Int } from '@nestjs/graphql';
 import { Document, Schema as MongooSchema } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Paginated } from 'src/app/common/dto/pagination-result.type';
+import { Paginated } from '../../common/dto/pagination-result.type';
 // import { Book } from 'src/app/book/entities/book.entity';
 
 @ObjectType()
@@ -20,23 +20,23 @@ export class User {
 
   @Field(() => String)
   @Prop()
-  externalId: string
+  externalId: string;
 
   @Field(() => String)
   @Prop()
-  externalType: string
+  externalType: string;
 
   @Field(() => Int, { defaultValue: 0 })
   @Prop({ default: 0 })
-  score: number
+  score: number;
 
   @Field(() => Int, { defaultValue: 0 })
   @Prop()
-  rank: number
+  rank: number;
 
   @Field(() => String, { nullable: true })
   @Prop()
-  picture: string
+  picture: string;
 
   @Field(() => Date)
   @Prop({ default: Date.now })
@@ -61,7 +61,7 @@ export class LoginUserResponseR {
 }
 
 @ObjectType()
-export class PaginatedUsers extends Paginated(User) { }
+export class PaginatedUsers extends Paginated(User) {}
 
 export type UserDocument = User & Document;
 export const UserSchema = SchemaFactory.createForClass(User);

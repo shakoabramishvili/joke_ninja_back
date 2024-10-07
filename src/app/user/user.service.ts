@@ -13,8 +13,6 @@ export class UserService {
   constructor(
     @InjectModel(User.name)
     private userModel: Model<UserDocument>,
-    private readonly configService: ConfigService,
-    private readonly paginationService: PaginationService,
   ) {}
 
   async createUser(createUserInput: CreateUserInput) {
@@ -34,15 +32,18 @@ export class UserService {
 
   async findOneBy(externalId: string) {
     return this.userModel.findOne({
-      externalId
-    })
+      externalId,
+    });
   }
 
   async getUserById(id: MongooSchema.Types.ObjectId) {
     const currentUser = await this.userModel.findById(id);
-    const userRank = await this.userModel.countDocuments({ score: { $gt: currentUser.score } }) + 1;
-    currentUser.rank = userRank
-    return currentUser
+    const userRank =
+      (await this.userModel.countDocuments({
+        score: { $gt: currentUser.score },
+      })) + 1;
+    currentUser.rank = userRank;
+    return currentUser;
   }
 
   updateUser(
@@ -59,8 +60,14 @@ export class UserService {
   async getUserLeaderboard(limit: number, user: User) {
     const users = await this.userModel.find().sort({ score: -1 }).limit(limit);
 
-    const currentUser = await this.userModel.findOne({ _id: user.id }, { score: 1 });
-    const userRank = await this.userModel.countDocuments({ score: { $gt: currentUser.score } }) + 1;
+    const currentUser = await this.userModel.findOne(
+      { _id: user.id },
+      { score: 1 },
+    );
+    const userRank =
+      (await this.userModel.countDocuments({
+        score: { $gt: currentUser.score },
+      })) + 1;
 
     return {
       users,

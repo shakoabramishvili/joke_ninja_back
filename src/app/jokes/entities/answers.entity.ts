@@ -1,6 +1,6 @@
-import { Field, Float, Int, ObjectType } from "@nestjs/graphql";
-import { Prop, Schema } from "@nestjs/mongoose";
-import { FunnyRank } from "src/app/shared/enum/funnyRank.enum";
+import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
+import { Prop, Schema } from '@nestjs/mongoose';
+import { FunnyRank } from '../../shared/enum/funnyRank.enum';
 
 @ObjectType()
 @Schema()

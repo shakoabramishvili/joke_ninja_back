@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { Joke } from 'src/app/jokes/entities/joke.entity';
+import { Joke } from '../src/app/jokes/entities/joke.entity';
 
 // Factory function to generate default or customized joke data
 export const jokeFactory = (overrides: Partial<Joke> = {}): Joke => {
