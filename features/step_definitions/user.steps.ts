@@ -12,25 +12,30 @@ let userService: UserService;
 
 let createdUser: User;
 let foundUser: User;
+let err: any;
 
 BeforeAll(async () => {
   userService = TestApp.get<UserService>(UserService);
 });
 
 defineStep(
-  'I create a new user with externalId: {string} and email: {string}',
-  async (externalId: string, email: string) => {
-    const user = await userService.createUser({
-      name: 'new-test',
-      email,
-      externalId,
-      picture: '',
-      externalType: 'google',
-    });
+  'I create a new user with externalId: {string} and email: {string} and name: {string}',
+  async (externalId: string, email: string, name: string) => {
+    try {
+      const user = await userService.createUser({
+        name,
+        email,
+        externalId,
+        picture: '',
+        externalType: 'google',
+      });
 
-    createdUser = user;
-    // this will just find here
-    assert.equal(user.name, 'new-test');
+      createdUser = user;
+      // this will just find here
+      assert.equal(user.name, name);
+    } catch (e) {
+      err = e;
+    }
   },
 );
 
@@ -47,6 +52,10 @@ defineStep(
   },
 );
 
-defineStep('User externalId must be: {string}', async (externalId: string) => {
+defineStep('User externalId must be: {string}', (externalId: string) => {
   assert.strictEqual(foundUser.externalId, externalId);
+});
+
+defineStep('I should see error code: {int}', (code: number) => {
+  assert.equal(err.code, code);
 });
