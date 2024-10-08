@@ -11,4 +11,7 @@ Feature: User creation
     When I search user by email: 'testUser@jokeninja.me'
     Then User externalId must be: '333'
   
+  Scenario: Search by externalId
+    When I search user by externalId: '444'
+    Then User externalId must be: '444'
     
