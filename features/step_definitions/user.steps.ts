@@ -31,6 +31,7 @@ defineStep(
       });
 
       createdUser = user;
+      err = { code: 0 };
       // this will just find here
       assert.equal(user.name, name);
     } catch (e) {

@@ -6,6 +6,7 @@ Feature: User creation
   Scenario: Search user by email
     Given I create a new user with externalId: '333' and email: 'testUser@jokeninja.me' and name: 'test-gela'
     When I search user by email: 'testUser@jokeninja.me'
+    Then I should see error code: 0
     Then User externalId must be: '333'
   
   Scenario: Search by externalId
