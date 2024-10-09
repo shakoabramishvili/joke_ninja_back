@@ -7,12 +7,15 @@ import { UpdateUserInput } from './dto/update-user.input';
 import { User, UserDocument } from './entities/user.entity';
 import { PaginationArgs } from '../common/dto/get-paginated.args';
 import { PaginationService } from '../common/pagination.service';
+import { DeletedUser, DeletedUserDocument } from './entities/deletedUser.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name)
     private userModel: Model<UserDocument>,
+    @InjectModel(DeletedUser.name)
+    private deletedUserModel: Model<DeletedUserDocument>
   ) {}
 
   async createUser(createUserInput: CreateUserInput) {
@@ -53,8 +56,18 @@ export class UserService {
     return this.userModel.findByIdAndUpdate(id, updateUserInput, { new: true });
   }
 
-  remove(id: MongooSchema.Types.ObjectId) {
-    return this.userModel.deleteOne({ id: id });
+  async remove(id: MongooSchema.Types.ObjectId) {
+    const user = await this.userModel.findById(id).lean();
+
+    if (!user) {
+      throw new Error('user_not_found');
+    }
+
+    // Insert the user data into the deletedUsers collection
+    await this.deletedUserModel.create(user);
+
+    // Delete the user from the users collection
+    return await this.userModel.deleteOne({ _id: id });
   }
 
   async getUserLeaderboard(limit: number, user: User) {

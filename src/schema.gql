@@ -33,6 +33,11 @@ type LeaderboardResponse {
   currentUserRank: Int!
 }
 
+type DeleteResponse {
+  success: Boolean!
+  message: String
+}
+
 type LoginUserResponse {
   user: User!
   authToken: String!
@@ -86,6 +91,7 @@ type Query {
 }
 
 type Mutation {
+  removeUser(id: ID!): DeleteResponse!
   login(loginUserInput: LoginUserInput!): LoginUserResponse!
   signup(signupInput: CreateUserInput!): User!
   socialAuth(socialAuthInput: SocialAuthInput!): LoginUserResponse!

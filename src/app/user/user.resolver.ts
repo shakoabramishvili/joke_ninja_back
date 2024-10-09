@@ -9,6 +9,7 @@ import { UseGuards } from '@nestjs/common';
 import { GetUser } from '../shared/decorators/current-user.decorator';
 import { PaginationArgs } from '../common/dto/get-paginated.args';
 import { LeaderboardResponse } from './dto/leaderboard-response';
+import { DeleteResponse } from './dto/delete-response';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -53,8 +54,14 @@ export class UserResolver {
   //   return this.userService.updateUser(updateUserInput.id, updateUserInput);
   // }
 
-  // @Mutation(() => User)
-  // removeUser(@Args('id', { type: () => Int }) id: MongooSchema.Types.ObjectId) {
-  //   return this.userService.remove(id);
-  // }
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => DeleteResponse)
+  async removeUser(@Args('id', { type: () => ID }) id: MongooSchema.Types.ObjectId): Promise<DeleteResponse> {
+    try {
+      await this.userService.remove(id);
+      return { success: true, message: 'user_deleted_successfully' };
+    } catch (error) {
+      return { success: false, message: error.message };
+    }
+  }
 }

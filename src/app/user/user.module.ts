@@ -5,11 +5,15 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './entities/user.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CommonModule } from '../common/common.module';
+import { DeletedUser, DeletedUserSchema } from './entities/deletedUser.entity';
 
 @Module({
   providers: [UserResolver, UserService, ConfigService],
   imports: [
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: User.name, schema: UserSchema },
+      { name: DeletedUser.name, schema: DeletedUserSchema }
+    ]),
     ConfigModule.forRoot({
       cache: true,
     }),
