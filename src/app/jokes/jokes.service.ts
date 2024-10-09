@@ -8,6 +8,7 @@ import { PaginationService } from '../common/pagination.service';
 import { PaginationArgs } from '../common/dto/get-paginated.args';
 import { User, UserDocument } from '../user/entities/user.entity';
 import { AnsweredJoke, AnsweredJokeDocument, AnsweredJokeSchema } from './entities/answeredJoke.entity';
+import { userScore } from '../shared/scores/ScoresCounter';
 
 @Injectable()
 export class JokesService {
@@ -47,6 +48,8 @@ export class JokesService {
       throw new NotFoundException('joke_not_found');
     }
     
+    const score = userScore(joke.answers, answerIndex);
+
     if (answerIndex !== undefined && answerIndex !== null) {
       if (answerIndex < 0 || answerIndex >= joke.answers.length) {
         throw new BadRequestException('invalid_answer_index');
@@ -59,7 +62,7 @@ export class JokesService {
 
       await this.userModel.updateOne(
         { _id: user.id },
-        { $inc: { [`score`]: joke.answers[answerIndex].funnyRank}}
+        { $inc: { [`score`]: score}}
       )
     }
     const currentUser = await this.userModel.findById(user.id);
@@ -76,7 +79,7 @@ export class JokesService {
 
     return { 
       joke: updatedJoke, 
-      userScored: joke.answers[answerIndex].funnyRank,
+      userScored: score,
       userRank
     };
   }  
