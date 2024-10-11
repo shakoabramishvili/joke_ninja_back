@@ -12,5 +12,5 @@ export class UpdateJokeInput extends PartialType(CreateJokeInput) {
   @Field(() => Int, { nullable: true })
   @IsOptional()
   @IsInt()
-  answerIndex?: number; 
+  answerIndex?: number;
 }
