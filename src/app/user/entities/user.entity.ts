@@ -38,6 +38,10 @@ export class User {
   @Prop()
   picture: string;
 
+  @Field(() => String, { nullable: true })
+  @Prop()
+  myJoke: string;
+
   @Field(() => Date)
   @Prop({ default: Date.now })
   createdAt: Date;

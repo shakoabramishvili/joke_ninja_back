@@ -49,10 +49,11 @@ export class UserResolver {
     return this.userService.getUserLeaderboard(limit, user);
   }
 
-  // @Mutation(() => User)
-  // updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
-  //   return this.userService.updateUser(updateUserInput.id, updateUserInput);
-  // }
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => User)
+  async updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
+    return await this.userService.updateUser(updateUserInput.id, updateUserInput);
+  }
 
   @UseGuards(JwtAuthGuard)
   @Mutation(() => DeleteResponse)

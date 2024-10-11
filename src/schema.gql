@@ -18,6 +18,7 @@ type User {
   score: Int!
   rank: Int!
   picture: String
+  myJoke: String
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
@@ -91,12 +92,23 @@ type Query {
 }
 
 type Mutation {
+  updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(id: ID!): DeleteResponse!
   login(loginUserInput: LoginUserInput!): LoginUserResponse!
   signup(signupInput: CreateUserInput!): User!
   socialAuth(socialAuthInput: SocialAuthInput!): LoginUserResponse!
   createJoke(createJokeInput: CreateJokeInput!): JokeResponse!
   updateJoke(updateJokeInput: UpdateJokeInput!): JokeResponse!
+}
+
+input UpdateUserInput {
+  name: String
+  email: String
+  externalId: String
+  externalType: String
+  picture: String
+  myJoke: String
+  id: ID!
 }
 
 input LoginUserInput {
@@ -110,6 +122,7 @@ input CreateUserInput {
   externalId: String!
   externalType: String!
   picture: String!
+  myJoke: String!
 }
 
 input SocialAuthInput {

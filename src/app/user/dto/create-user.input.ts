@@ -26,4 +26,8 @@ export class CreateUserInput {
 
   @Field(() => String)
   picture: string;
+
+  @Field(() => String)
+  @IsOptional()
+  myJoke?: string
 }
