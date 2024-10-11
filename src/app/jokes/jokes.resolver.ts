@@ -32,6 +32,13 @@ export class JokesResolver {
     return this.jokesService.findOne(id);
   }
 
+  @Query(() => Joke, { name: 'publicSingleJoke' })
+  publicSingleJoke(
+    @Args('id', { type: () => ID }) id: MongooSchema.Types.ObjectId,
+  ) {
+    return this.jokesService.findOne(id);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Mutation(() => JokeResponse)
   updateJoke(
