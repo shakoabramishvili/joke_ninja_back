@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateJokeInput } from './dto/create-joke.input';
 import { UpdateJokeInput } from './dto/update-joke.input';
 import { InjectModel } from '@nestjs/mongoose';
@@ -7,7 +11,11 @@ import { Model, Schema as MongooSchema } from 'mongoose';
 import { PaginationService } from '../common/pagination.service';
 import { PaginationArgs } from '../common/dto/get-paginated.args';
 import { User, UserDocument } from '../user/entities/user.entity';
-import { AnsweredJoke, AnsweredJokeDocument, AnsweredJokeSchema } from './entities/answeredJoke.entity';
+import {
+  AnsweredJoke,
+  AnsweredJokeDocument,
+  AnsweredJokeSchema,
+} from './entities/answeredJoke.entity';
 import { userScore } from '../shared/scores/ScoresCounter';
 
 @Injectable()
@@ -22,75 +30,84 @@ export class JokesService {
     private readonly paginationService: PaginationService,
   ) {}
   create(createJokeInput: CreateJokeInput) {
-    const createJoke = new this.jokeModel(createJokeInput)
+    const createJoke = new this.jokeModel(createJokeInput);
     return createJoke.save();
   }
 
   async findAllJokes(pagination: PaginationArgs, user: User) {
-    const answeredJokesId = await this.getAnsweredJokesByUserId(user.id)
+    const answeredJokesId = await this.getAnsweredJokesByUserId(user.id);
 
     const notInJokes = this.jokeModel.find({
       _id: { $nin: answeredJokesId },
     });
-    
-    return await this.paginationService.paginate(notInJokes, pagination)
+
+    return await this.paginationService.paginate(notInJokes, pagination);
   }
 
   async findOne(id: MongooSchema.Types.ObjectId) {
-    return await this.jokeModel.findById(id)
-  }
-
-  async updateJoke(_id: MongooSchema.Types.ObjectId, updateJokeInput: UpdateJokeInput, user: User) {
-    const { id, answerIndex } = updateJokeInput;
-    
     const joke = await this.jokeModel.findById(id);
     if (!joke) {
       throw new NotFoundException('joke_not_found');
     }
-    
+
+    return joke;
+  }
+
+  async updateJoke(
+    _id: MongooSchema.Types.ObjectId,
+    updateJokeInput: UpdateJokeInput,
+    user: User,
+  ) {
+    const { id, answerIndex } = updateJokeInput;
+
+    const joke = await this.findOne(id);
+
     const score = userScore(joke.answers, answerIndex);
 
     if (answerIndex !== undefined && answerIndex !== null) {
       if (answerIndex < 0 || answerIndex >= joke.answers.length) {
         throw new BadRequestException('invalid_answer_index');
       }
-  
+
       await this.jokeModel.updateOne(
         { _id: id },
-        { $inc: { [`answers.${answerIndex}.clickCount`]: 1 } }
+        { $inc: { [`answers.${answerIndex}.clickCount`]: 1 } },
       );
 
       await this.userModel.updateOne(
         { _id: user.id },
-        { $inc: { [`score`]: score}}
-      )
+        { $inc: { [`score`]: score } },
+      );
     }
     const currentUser = await this.userModel.findById(user.id);
-    const userRank = await this.userModel.countDocuments({ score: { $gt: currentUser.score } }) + 1;
-    const updatedJoke = await this.jokeModel.findById(
-      id, 
-    );
-    
+    const userRank =
+      (await this.userModel.countDocuments({
+        score: { $gt: currentUser.score },
+      })) + 1;
+    const updatedJoke = await this.findOne(id);
+
     const answeredJoke = new this.answeredJokeModel({
       userId: user.id,
       jokeId: updatedJoke.id,
     });
     await answeredJoke.save();
 
-    return { 
-      joke: updatedJoke, 
+    return {
+      joke: updatedJoke,
       userScored: score,
-      userRank
+      userRank,
     };
-  }  
+  }
 
-  async getAnsweredJokesByUserId(userId: MongooSchema.Types.ObjectId): Promise<String[]> {
+  async getAnsweredJokesByUserId(
+    userId: MongooSchema.Types.ObjectId,
+  ): Promise<String[]> {
     const answeredJokes = await this.answeredJokeModel
       .find({ userId })
       .select('jokeId')
       .lean()
       .exec();
-      return answeredJokes.map(aq => aq.jokeId.toString());
+    return answeredJokes.map((aq) => aq.jokeId.toString());
   }
 
   remove(id: number) {

@@ -1,16 +1,13 @@
-import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { JokesService } from './jokes.service';
 import { Joke, PaginatedJokes } from './entities/joke.entity';
 import { CreateJokeInput } from './dto/create-joke.input';
 import { UpdateJokeInput } from './dto/update-joke.input';
 import { PaginationArgs } from '../common/dto/get-paginated.args';
-import { IncrementAnswerCountInput } from './dto/increment-answer-count.input';
 import { JokeResponse } from './dto/joke-response';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../shared/guards/jwt-auth.gards';
-import { Context } from 'apollo-server-core';
 import { GetUser } from '../shared/decorators/current-user.decorator';
-import { GqlAuthGuard } from '../shared/guards/gql-auth.guards';
 import { User } from '../user/entities/user.entity';
 import { Schema as MongooSchema } from 'mongoose';
 
@@ -31,18 +28,27 @@ export class JokesResolver {
 
   @UseGuards(JwtAuthGuard)
   @Query(() => Joke, { name: 'joke' })
-  async findOne(@Args('id', { type: () => ID }) id: MongooSchema.Types.ObjectId): Promise<Joke> {
-    return await this.jokesService.findOne(id);
+  findOne(@Args('id', { type: () => ID }) id: MongooSchema.Types.ObjectId) {
+    return this.jokesService.findOne(id);
+  }
+
+  @Query(() => Joke, { name: 'publicSingleJoke' })
+  publicSingleJoke(
+    @Args('id', { type: () => ID }) id: MongooSchema.Types.ObjectId,
+  ) {
+    return this.jokesService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Mutation(() => JokeResponse)
-  updateJoke(@Args('updateJokeInput') updateJokeInput: UpdateJokeInput, @GetUser() user: User) {
-    return this.jokesService.updateJoke(updateJokeInput.id, updateJokeInput, user);
+  updateJoke(
+    @Args('updateJokeInput') updateJokeInput: UpdateJokeInput,
+    @GetUser() user: User,
+  ) {
+    return this.jokesService.updateJoke(
+      updateJokeInput.id,
+      updateJokeInput,
+      user,
+    );
   }
-
-  // @Mutation(() => Joke)
-  // removeJoke(@Args('id', { type: () => Int }) id: number) {
-  //   return this.jokesService.remove(id);
-  // }
 }

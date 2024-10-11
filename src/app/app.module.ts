@@ -49,8 +49,10 @@ import { SharedModule } from './shared/shared.module';
         const uri = configService.get<string>('MONGODB_URI');
         const local_db_name = configService.get<string>('LOCAL_DB_NAME');
 
-        const is_localhost = configService.get<string>('IS_LOCALHOST');
-        const is_testing = configService.get<string>('IS_TESTING');
+        const is_localhost =
+          configService.get<string>('IS_LOCALHOST') === 'true';
+
+        const is_testing = configService.get<string>('IS_TESTING') === 'true';
         const test_db = encodeURIComponent(
           configService.get<string>('TEST_DB_NAME'),
         );
@@ -60,7 +62,6 @@ import { SharedModule } from './shared/shared.module';
             ? `mongodb://localhost/${is_testing ? test_db : local_db_name}`
             : `mongodb+srv://${username}:${password}@${uri}/${databaseName}`,
         };
-
         return options;
       },
     }),
