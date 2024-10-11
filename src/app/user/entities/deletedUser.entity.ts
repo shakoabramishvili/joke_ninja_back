@@ -13,7 +13,7 @@ export class DeletedUser {
   name: string;
 
   @Field(() => String)
-  @Prop({ unique: true })
+  @Prop()
   email: string;
 
   @Field(() => String)

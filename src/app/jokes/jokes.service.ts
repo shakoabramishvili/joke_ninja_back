@@ -36,8 +36,8 @@ export class JokesService {
     return await this.paginationService.paginate(notInJokes, pagination)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} joke`;
+  async findOne(id: MongooSchema.Types.ObjectId) {
+    return await this.jokeModel.findById(id)
   }
 
   async updateJoke(_id: MongooSchema.Types.ObjectId, updateJokeInput: UpdateJokeInput, user: User) {

@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
 import { JokesService } from './jokes.service';
 import { Joke, PaginatedJokes } from './entities/joke.entity';
 import { CreateJokeInput } from './dto/create-joke.input';
@@ -12,6 +12,7 @@ import { Context } from 'apollo-server-core';
 import { GetUser } from '../shared/decorators/current-user.decorator';
 import { GqlAuthGuard } from '../shared/guards/gql-auth.guards';
 import { User } from '../user/entities/user.entity';
+import { Schema as MongooSchema } from 'mongoose';
 
 @Resolver(() => Joke)
 export class JokesResolver {
@@ -28,9 +29,10 @@ export class JokesResolver {
     return this.jokesService.findAllJokes(args, user);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Query(() => Joke, { name: 'joke' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.jokesService.findOne(id);
+  async findOne(@Args('id', { type: () => ID }) id: MongooSchema.Types.ObjectId): Promise<Joke> {
+    return await this.jokesService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard)

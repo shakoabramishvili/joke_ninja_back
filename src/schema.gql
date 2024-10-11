@@ -87,7 +87,7 @@ type Query {
   getCurrentUser: User!
   leaderboard(limit: Int!): LeaderboardResponse!
   jokes(first: Int, after: String, last: Int, before: String): PaginatedJokes!
-  joke(id: Int!): Joke!
+  joke(id: ID!): Joke!
 }
 
 type Mutation {
