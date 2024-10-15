@@ -2,6 +2,7 @@ import { Global, Module } from "@nestjs/common";
 import { FirebaseModule } from "nestjs-firebase";
 import * as path from 'path';
 import { GoogleService } from "./services/google.service";
+import { UploadService } from "./services/upload.service";
 
 @Global()
 @Module({
@@ -16,7 +17,7 @@ import { GoogleService } from "./services/google.service";
             ),
           }),
     ],
-    providers: [GoogleService],
-    exports: []
+    providers: [GoogleService, UploadService],
+    exports: [UploadService]
 })
 export class SharedModule {}

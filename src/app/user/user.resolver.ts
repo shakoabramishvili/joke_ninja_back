@@ -1,19 +1,22 @@
 import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
 import { UserService } from './user.service';
-import { PaginatedUsers, User } from './entities/user.entity';
-import { CreateUserInput } from './dto/create-user.input';
+import { User } from './entities/user.entity';
 import { UpdateUserInput } from './dto/update-user.input';
 import { Schema as MongooSchema } from 'mongoose';
 import { JwtAuthGuard } from '../shared/guards/jwt-auth.gards';
 import { UseGuards } from '@nestjs/common';
 import { GetUser } from '../shared/decorators/current-user.decorator';
-import { PaginationArgs } from '../common/dto/get-paginated.args';
 import { LeaderboardResponse } from './dto/leaderboard-response';
 import { DeleteResponse } from './dto/delete-response';
+import { GraphQLUpload, FileUpload } from 'graphql-upload';
+import { UploadService } from '../shared/services/upload.service';
 
 @Resolver(() => User)
 export class UserResolver {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly uploadService: UploadService
+  ) {}
 
   // @Mutation(() => User)
   // createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
@@ -51,7 +54,14 @@ export class UserResolver {
 
   @UseGuards(JwtAuthGuard)
   @Mutation(() => User)
-  async updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
+  async updateUser(
+    @Args('updateUserInput') updateUserInput: UpdateUserInput,
+    @Args('file', { type: () => GraphQLUpload, nullable: true }) file?: FileUpload,
+    ) {
+    if (file) {
+      const uploadedPictureUrl = await this.uploadService.uploadFile(file);
+      updateUserInput.picture = uploadedPictureUrl;
+    }
     return await this.userService.updateUser(updateUserInput.id, updateUserInput);
   }
 
@@ -65,4 +75,11 @@ export class UserResolver {
       return { success: false, message: error.message };
     }
   }
+
+  // @Mutation(() => String)
+  // async singleUpload(
+  //   @Args('file', { type: () => GraphQLUpload }) file: FileUpload,
+  // ): Promise<string> {
+  //   return this.uploadService.uploadFile(file);
+  // }
 }

@@ -6,6 +6,7 @@ import { User, UserSchema } from './entities/user.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CommonModule } from '../common/common.module';
 import { DeletedUser, DeletedUserSchema } from './entities/deletedUser.entity';
+import { SharedModule } from '../shared/shared.module';
 
 @Module({
   providers: [UserResolver, UserService, ConfigService],
@@ -17,7 +18,8 @@ import { DeletedUser, DeletedUserSchema } from './entities/deletedUser.entity';
     ConfigModule.forRoot({
       cache: true,
     }),
-    CommonModule
+    CommonModule,
+    SharedModule
   ],
   // make sure the UserService is exported so that it's not longer private
   exports: [UserService],
