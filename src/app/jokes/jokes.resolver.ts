@@ -15,9 +15,9 @@ import { Schema as MongooSchema } from 'mongoose';
 export class JokesResolver {
   constructor(private readonly jokesService: JokesService) {}
 
-  @Mutation(() => JokeResponse)
-  createJoke(@Args('createJokeInput') createJokeInput: CreateJokeInput) {
-    return this.jokesService.create(createJokeInput);
+  @Mutation(() => Joke)
+  async createJoke(@Args('createJokeInput') createJokeInput: CreateJokeInput) {
+    return await this.jokesService.create(createJokeInput);
   }
 
   @UseGuards(JwtAuthGuard)

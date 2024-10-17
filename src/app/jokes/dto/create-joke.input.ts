@@ -1,5 +1,7 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
-import { IsArray, IsString, IsUrl } from 'class-validator';
+import { IsArray, IsString, IsUrl, ValidateNested } from 'class-validator';
+import { CreateAnswerInput } from './create-answer.input';
+import { Type } from 'class-transformer';
 
 @InputType()
 export class CreateJokeInput {
@@ -10,4 +12,9 @@ export class CreateJokeInput {
   @Field(() => String)
   @IsUrl()
   coverImage: string;
+
+  @Field(() => [CreateAnswerInput], { nullable: true })
+  @ValidateNested({ each: true })
+  @Type(() => CreateAnswerInput)
+  answers?: CreateAnswerInput[];
 }

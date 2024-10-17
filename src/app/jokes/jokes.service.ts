@@ -29,7 +29,8 @@ export class JokesService {
     private answeredJokeModel: Model<AnsweredJokeDocument>,
     private readonly paginationService: PaginationService,
   ) {}
-  create(createJokeInput: CreateJokeInput) {
+  
+  async create(createJokeInput: CreateJokeInput) {
     const createJoke = new this.jokeModel(createJokeInput);
     return createJoke.save();
   }

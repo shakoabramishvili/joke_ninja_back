@@ -98,7 +98,7 @@ type Mutation {
   login(loginUserInput: LoginUserInput!): LoginUserResponse!
   signup(signupInput: CreateUserInput!): User!
   socialAuth(socialAuthInput: SocialAuthInput!): LoginUserResponse!
-  createJoke(createJokeInput: CreateJokeInput!): JokeResponse!
+  createJoke(createJokeInput: CreateJokeInput!): Joke!
   updateJoke(updateJokeInput: UpdateJokeInput!): JokeResponse!
 }
 
@@ -146,11 +146,19 @@ enum AuthMethodEnum {
 input CreateJokeInput {
   question: String!
   coverImage: String!
+  answers: [CreateAnswerInput!]
+}
+
+input CreateAnswerInput {
+  text: String!
+  funnyRank: FunnyRank!
+  clickCount: Int! = 0
 }
 
 input UpdateJokeInput {
   question: String
   coverImage: String
+  answers: [CreateAnswerInput!]
   id: ID!
   answerIndex: Int
 }
