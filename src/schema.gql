@@ -65,6 +65,7 @@ type Joke {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
+  joker: User
 }
 
 type PaginatedJokes {
@@ -98,7 +99,7 @@ type Mutation {
   login(loginUserInput: LoginUserInput!): LoginUserResponse!
   signup(signupInput: CreateUserInput!): User!
   socialAuth(socialAuthInput: SocialAuthInput!): LoginUserResponse!
-  createJoke(createJokeInput: CreateJokeInput!): JokeResponse!
+  createJoke(createJokeInput: CreateJokeInput!): Joke!
   updateJoke(updateJokeInput: UpdateJokeInput!): JokeResponse!
 }
 
