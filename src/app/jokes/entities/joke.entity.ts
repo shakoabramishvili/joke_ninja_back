@@ -3,6 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Schema as MongooSchema } from 'mongoose';
 import { Paginated } from '../../common/dto/pagination-result.type';
 import { Answer } from './answers.entity';
+import { User } from 'src/app/user/entities/user.entity';
 
 @ObjectType()
 @Schema({ timestamps: true })
@@ -33,6 +34,10 @@ export class Joke {
   @Field(() => Date, { nullable: true })
   @Prop()
   deletedAt?: Date;
+
+  @Field(() => User, { nullable: true })
+  @Prop()
+  joker: User;
 }
 
 @ObjectType()
