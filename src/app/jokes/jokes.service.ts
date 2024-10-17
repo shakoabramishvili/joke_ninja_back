@@ -29,17 +29,27 @@ export class JokesService {
     private answeredJokeModel: Model<AnsweredJokeDocument>,
     private readonly paginationService: PaginationService,
   ) {}
-  
-  async create(createJokeInput: CreateJokeInput) {
-    const createJoke = new this.jokeModel(createJokeInput);
-    return createJoke.save();
+  async create(createJokeInput: CreateJokeInput, user: User) {
+    const createJoke = new this.jokeModel({
+      question: createJokeInput.question,
+      coverImage: createJokeInput.coverImage,
+      joker: user,
+    });
+
+    const created = await createJoke.save();
+    return created;
   }
 
-  async findAllJokes(pagination: PaginationArgs, user: User) {
+  async findAllJokes(
+    pagination: PaginationArgs,
+    user: User,
+    getMyJokes: boolean = false,
+  ) {
     const answeredJokesId = await this.getAnsweredJokesByUserId(user.id);
 
     const notInJokes = this.jokeModel.find({
       _id: { $nin: answeredJokesId },
+      'joker._id': user.id,
     });
 
     return await this.paginationService.paginate(notInJokes, pagination);

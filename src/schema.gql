@@ -65,6 +65,7 @@ type Joke {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
+  joker: User
 }
 
 type PaginatedJokes {

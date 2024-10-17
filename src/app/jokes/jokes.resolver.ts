@@ -15,15 +15,25 @@ import { Schema as MongooSchema } from 'mongoose';
 export class JokesResolver {
   constructor(private readonly jokesService: JokesService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => Joke)
-  async createJoke(@Args('createJokeInput') createJokeInput: CreateJokeInput) {
-    return await this.jokesService.create(createJokeInput);
+  createJoke(
+    @Args('createJokeInput') createJokeInput: CreateJokeInput,
+    @GetUser() user: User,
+  ) {
+    return this.jokesService.create(createJokeInput, user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Query(() => PaginatedJokes, { name: 'jokes' })
   findAllJokes(@Args() args: PaginationArgs, @GetUser() user: User) {
     return this.jokesService.findAllJokes(args, user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Query(() => PaginatedJokes, { name: 'jokes' })
+  findMyJokes(@Args() args: PaginationArgs, @GetUser() user: User) {
+    return this.jokesService.findAllJokes(args, user, true);
   }
 
   @UseGuards(JwtAuthGuard)
