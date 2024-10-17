@@ -31,8 +31,7 @@ export class JokesService {
   ) {}
   async create(createJokeInput: CreateJokeInput, user: User) {
     const createJoke = new this.jokeModel({
-      question: createJokeInput.question,
-      coverImage: createJokeInput.coverImage,
+      ...createJokeInput,
       joker: user,
     });
 
