@@ -32,25 +32,27 @@ export class JokesService {
   async create(createJokeInput: CreateJokeInput, user: User) {
     const createJoke = new this.jokeModel({
       ...createJokeInput,
-      joker: user,
+      userId: user.id,
     });
 
     const created = await createJoke.save();
     return created;
   }
 
-  async findAllJokes(
-    pagination: PaginationArgs,
-    user: User,
-    getMyJokes: boolean = false,
-  ) {
+  async findAllJokes(pagination: PaginationArgs, user: User) {
     const answeredJokesId = await this.getAnsweredJokesByUserId(user.id);
 
     const notInJokes = this.jokeModel.find({
       _id: { $nin: answeredJokesId },
-      'joker._id': user.id,
     });
 
+    return await this.paginationService.paginate(notInJokes, pagination);
+  }
+
+  async findMyAllJokes(pagination: PaginationArgs, user: User) {
+    const notInJokes = this.jokeModel.find({
+      userId: user.id,
+    });
     return await this.paginationService.paginate(notInJokes, pagination);
   }
 

@@ -31,9 +31,9 @@ export class JokesResolver {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Query(() => PaginatedJokes, { name: 'jokes' })
+  @Query(() => PaginatedJokes, { name: 'myJokes' })
   findMyJokes(@Args() args: PaginationArgs, @GetUser() user: User) {
-    return this.jokesService.findAllJokes(args, user, true);
+    return this.jokesService.findMyAllJokes(args, user);
   }
 
   @UseGuards(JwtAuthGuard)

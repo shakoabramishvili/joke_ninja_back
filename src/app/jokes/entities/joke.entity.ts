@@ -35,9 +35,9 @@ export class Joke {
   @Prop()
   deletedAt?: Date;
 
-  @Field(() => User, { nullable: true })
-  @Prop()
-  joker: User;
+  @Field(() => ID, { nullable: true })
+  @Prop({ type: MongooSchema.Types.ObjectId })
+  userId: MongooSchema.Types.ObjectId;
 }
 
 @ObjectType()
