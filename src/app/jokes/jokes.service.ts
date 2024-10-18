@@ -42,15 +42,14 @@ export class JokesService {
   async findAllJokes(pagination: PaginationArgs, user: User) {
     const answeredJokesId = await this.getAnsweredJokesByUserId(user.id);
 
-    const notInJokes = this.jokeModel.find({
+    const notInJokes = await this.jokeModel.find({
       _id: { $nin: answeredJokesId },
-    });
-
+    })
     return await this.paginationService.paginate(notInJokes, pagination);
   }
 
   async findMyAllJokes(pagination: PaginationArgs, user: User) {
-    const notInJokes = this.jokeModel.find({
+    const notInJokes = await this.jokeModel.find({
       userId: user.id,
     });
     return await this.paginationService.paginate(notInJokes, pagination);

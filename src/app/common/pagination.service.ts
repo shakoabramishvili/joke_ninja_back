@@ -1,70 +1,62 @@
 import { Injectable } from '@nestjs/common';
-import { Model, Query } from 'mongoose';
 import { PaginationArgs } from './dto/get-paginated.args';
 import { Edge, PageInfo } from './dto/pagination-result.type';
 
 @Injectable()
 export class PaginationService {
-  async paginate<T>(
-    query: Query<T[], T>,
+  async paginate<T extends { _id: any }>(
+    results: T[],
     paginationArgs: PaginationArgs,
-    populateFields?: string[],
   ): Promise<any> {
     const { first, after, last, before } = paginationArgs;
 
-    // let query = model.find();
-
-    if (populateFields?.length) {
-      query = query.populate(populateFields.join(' ')) as any;
-    }
-
-    const limit = first ? first : last ? last : 0;
+    let paginatedResults: T[] = results;
 
     if (after) {
-      const lastDocument = await query.model.findById(after).exec();
-      if (lastDocument) {
-        query = query.where('_id').gt(lastDocument.id as any);
+      const afterIndex = paginatedResults.findIndex(
+        (item) => item._id.toString() === after,
+      );
+      if (afterIndex !== -1) {
+        paginatedResults = paginatedResults.slice(afterIndex + 1);
       }
     }
 
     if (before) {
-      const firstDocument = await query.model.findById(before).exec();
-      if (firstDocument) {
-        query = query.where('_id').lt(firstDocument.id as any);
+      const beforeIndex = paginatedResults.findIndex(
+        (item) => item._id.toString() === before,
+      );
+      if (beforeIndex !== -1) {
+        paginatedResults = paginatedResults.slice(0, beforeIndex);
       }
     }
-    query = query.limit(limit);
 
-    const results = (await query.exec()) as (T & { _id: any })[];
+    if (first) {
+      paginatedResults = paginatedResults.slice(0, first);
+    } else if (last) {
+      paginatedResults = paginatedResults.slice(-last);
+    }
 
-    const startCursor = results.length ? results[0]._id.toString() : null;
-    const endCursor = results.length
-      ? results[results.length - 1]._id.toString()
+    const startCursor = paginatedResults.length ? paginatedResults[0]._id.toString() : null;
+    const endCursor = paginatedResults.length
+      ? paginatedResults[paginatedResults.length - 1]._id.toString()
       : null;
 
-    const beforeQuery = query.model.find();
-    const beforeCount = await beforeQuery
-      .where('_id')
-      .lt(startCursor as any)
-      .count()
-      .exec();
+    const hasPreviousPage = before
+      ? results.findIndex((item) => item._id.toString() === before) > 0
+      : false;
+    const hasNextPage = after
+      ? results.findIndex((item) => item._id.toString() === after) < results.length - 1
+      : paginatedResults.length < results.length;
 
-    const afterQuery = query.model.find();
-    const afterCount = await afterQuery
-      .where('_id')
-      .gt(endCursor as any)
-      .count()
-      .exec();
-
-    const edges: Edge<T>[] = results.map((doc) => ({
+    const edges: Edge<T>[] = paginatedResults.map((doc) => ({
       node: doc,
       cursor: doc._id.toString(),
     }));
 
     const pageInfo: PageInfo = {
-      hasNextPage: afterCount > 0,
+      hasNextPage,
       endCursor: endCursor || null,
-      hasPreviousPage: beforeCount > 0,
+      hasPreviousPage,
       startCursor: startCursor || null,
     };
 
