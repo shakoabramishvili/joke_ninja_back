@@ -1,12 +1,12 @@
-import { registerEnumType } from "@nestjs/graphql";
+import { registerEnumType } from '@nestjs/graphql';
 
 export enum FunnyRank {
-    WORST = -1,
-    GOOD = 1,
-    BEST = 2
+  GOOD = 2,
+  BAD = 1,
+  UGLY = -1,
 }
 
 registerEnumType(FunnyRank, {
-    name: "FunnyRank",
-    description: "FunnyRank",
+  name: 'FunnyRank',
+  description: 'FunnyRank',
 });

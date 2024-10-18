@@ -52,9 +52,9 @@ type Answer {
 
 """FunnyRank"""
 enum FunnyRank {
-  WORST
   GOOD
-  BEST
+  BAD
+  UGLY
 }
 
 type Joke {
