@@ -1,7 +1,7 @@
 import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Schema as MongooSchema } from 'mongoose';
-import { Paginated } from '../../common/dto/pagination-result.type';
+import { edgeClass, Paginated } from '../../common/dto/pagination-result.type';
 import { Answer } from './answers.entity';
 import { User } from 'src/app/user/entities/user.entity';
 
@@ -42,6 +42,9 @@ export class Joke {
 
 @ObjectType()
 export class PaginatedJokes extends Paginated(Joke) {}
+
+@ObjectType()
+export class JokeMutationEdge extends edgeClass(Joke) {}
 
 export type JokeDocument = Joke & Document;
 export const JokeSchema = SchemaFactory.createForClass(Joke);
