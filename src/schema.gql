@@ -78,6 +78,11 @@ type JokeEdge {
   node: Joke!
 }
 
+type JokeMutationEdge {
+  cursor: String!
+  node: Joke!
+}
+
 type JokeResponse {
   joke: Joke!
   userScored: Int!
@@ -100,7 +105,7 @@ type Mutation {
   login(loginUserInput: LoginUserInput!): LoginUserResponse!
   signup(signupInput: CreateUserInput!): User!
   socialAuth(socialAuthInput: SocialAuthInput!): LoginUserResponse!
-  createJoke(createJokeInput: CreateJokeInput!): Joke!
+  createJoke(createJokeInput: CreateJokeInput!): JokeMutationEdge!
   updateJoke(updateJokeInput: UpdateJokeInput!): JokeResponse!
 }
 

@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { JokesService } from './jokes.service';
-import { Joke, PaginatedJokes } from './entities/joke.entity';
+import { Joke, JokeMutationEdge, PaginatedJokes } from './entities/joke.entity';
 import { CreateJokeInput } from './dto/create-joke.input';
 import { UpdateJokeInput } from './dto/update-joke.input';
 import { PaginationArgs } from '../common/dto/get-paginated.args';
@@ -10,18 +10,23 @@ import { JwtAuthGuard } from '../shared/guards/jwt-auth.gards';
 import { GetUser } from '../shared/decorators/current-user.decorator';
 import { User } from '../user/entities/user.entity';
 import { Schema as MongooSchema } from 'mongoose';
+import { EdgeType } from '../common/dto/pagination-result.type';
 
 @Resolver(() => Joke)
 export class JokesResolver {
   constructor(private readonly jokesService: JokesService) {}
 
   @UseGuards(JwtAuthGuard)
-  @Mutation(() => Joke)
-  createJoke(
+  @Mutation(() => JokeMutationEdge)
+  async createJoke(
     @Args('createJokeInput') createJokeInput: CreateJokeInput,
     @GetUser() user: User,
   ) {
-    return this.jokesService.create(createJokeInput, user);
+    const joke = await this.jokesService.create(createJokeInput, user);
+    return {
+      cursor: joke._id.toString(),
+      node: joke,
+    };
   }
 
   @UseGuards(JwtAuthGuard)
