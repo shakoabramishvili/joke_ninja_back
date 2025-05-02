@@ -1,0 +1,13 @@
+services:
+  app:
+    container_name: joke-ninja-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+    restart: unless-stopped
