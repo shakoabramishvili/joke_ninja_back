@@ -2,6 +2,9 @@
   FROM node:20-alpine AS build
   WORKDIR /app
   
+  # Set faster Yarn registry
+  RUN yarn config set registry https://registry.npmjs.org
+
   # Copy dependency definitions
   COPY package.json yarn.lock ./
   RUN yarn install --frozen-lockfile
