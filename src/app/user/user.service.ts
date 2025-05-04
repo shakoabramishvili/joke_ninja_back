@@ -18,6 +18,26 @@ export class UserService {
     private deletedUserModel: Model<DeletedUserDocument>
   ) {}
 
+  async sendPushNotification(expoPushToken: string, name: string) {
+    const message = {
+      to: expoPushToken,
+      sound: 'default',
+      title: `${name} is watching you`,
+      body: 'Prove that you are the best Ninja!',
+      data: { },
+    };
+
+    const x = await fetch('https://exp.host/--/api/v2/push/send', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Accept-encoding': 'gzip, deflate',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(message),
+    }).then(res => res.json()).then(data => console.log(data));
+  }
+
   async createUser(createUserInput: CreateUserInput) {
     const createdUser = new this.userModel(createUserInput);
 
@@ -119,11 +139,16 @@ export class UserService {
     return this.userModel.find(query).populate('friends', '-__v').sort({ name: 1 });
   }
 
-  async addFriend(userId: MongooSchema.Types.ObjectId, friendId: MongooSchema.Types.ObjectId): Promise<User> {
+  async addFriend(userId: MongooSchema.Types.ObjectId, myName: string, friendId: MongooSchema.Types.ObjectId): Promise<User> {
     // Check if friend exists
     const friendExists = await this.userModel.findById(friendId);
     if (!friendExists) {
       throw new Error('friend_not_found');
+    }
+    
+    // Send push notification if friend has fcmToken
+    if (friendExists.fcmToken) {
+      await this.sendPushNotification(friendExists.fcmToken, myName);
     }
 
     // Check if already friends (to avoid duplicates)

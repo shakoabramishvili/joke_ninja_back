@@ -91,6 +91,6 @@ export class UserResolver {
     @GetUser() user: User,
     @Args('addFriendInput') addFriendInput: AddFriendInput,
   ) {
-    return this.userService.addFriend(user.id, addFriendInput.friendId);
+    return this.userService.addFriend(user.id, user.name, addFriendInput.friendId);
   }
 }
