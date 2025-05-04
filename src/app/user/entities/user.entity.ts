@@ -42,6 +42,10 @@ export class User {
   @Prop()
   myJoke: string;
 
+  @Field(() => [User], { nullable: true })
+  @Prop({ type: [{ type: MongooSchema.Types.ObjectId, ref: 'User' }], default: [] })
+  friends: User[];
+
   @Field(() => Date)
   @Prop({ default: Date.now })
   createdAt: Date;
@@ -53,6 +57,10 @@ export class User {
   @Field(() => Date, { nullable: true })
   @Prop()
   deletedAt?: Date;
+
+  @Field(() => String, { nullable: true })
+  @Prop()
+  fcmToken?: string;
 }
 
 @ObjectType()

@@ -24,11 +24,6 @@ export class UserService {
     return createdUser.save();
   }
 
-  findAll() {
-    // To implement later
-    return this.userModel.find().skip(0).limit(10);
-  }
-
   async findOneByEmail(email: string) {
     return this.userModel.findOne({ email });
   }
@@ -40,7 +35,14 @@ export class UserService {
   }
 
   async getUserById(id: MongooSchema.Types.ObjectId) {
-    const currentUser = await this.userModel.findById(id);
+    const currentUser = await this.userModel.findById(id)
+      .populate('friends', '-__v') // Populate friends with user data, excluding the __v field
+      .exec();
+    
+    if (!currentUser) {
+      throw new Error('user_not_found');
+    }
+    
     const userRank =
       (await this.userModel.countDocuments({
         score: { $gt: currentUser.score },
@@ -71,7 +73,10 @@ export class UserService {
   }
 
   async getUserLeaderboard(limit: number, user: User) {
-    const users = await this.userModel.find().sort({ score: -1 }).limit(limit);
+    const users = await this.userModel.find()
+      .populate('friends', '-__v')
+      .sort({ score: -1 })
+      .limit(limit);
 
     const currentUser = await this.userModel.findOne(
       { _id: user.id },
@@ -86,5 +91,56 @@ export class UserService {
       users,
       currentUserRank: userRank,
     };
+  }
+
+  async findAllUsers(searchTerm?: string, currentUserId?: MongooSchema.Types.ObjectId) {
+    let query: any = {};
+    // Exclude the current user and their friends from results if currentUserId is provided
+    if (currentUserId) {
+      const currentUser = await this.userModel.findById(currentUserId);
+      if (currentUser) {
+        // Exclude both the current user and their friends
+        const excludeIds = [currentUserId, ...(currentUser.friends || [])];
+        
+        query._id = { $nin: excludeIds };
+      }
+    }
+    
+    if (searchTerm && searchTerm.length >= 3) {
+      // Simple case-insensitive regex search
+      const escapedSearchTerm = searchTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+      
+      query.$or = [
+        { name: { $regex: escapedSearchTerm, $options: 'i' } },
+        { email: { $regex: escapedSearchTerm, $options: 'i' } }
+      ];
+    }
+    
+    return this.userModel.find(query).populate('friends', '-__v').sort({ name: 1 });
+  }
+
+  async addFriend(userId: MongooSchema.Types.ObjectId, friendId: MongooSchema.Types.ObjectId): Promise<User> {
+    // Check if friend exists
+    const friendExists = await this.userModel.findById(friendId);
+    if (!friendExists) {
+      throw new Error('friend_not_found');
+    }
+
+    // Check if already friends (to avoid duplicates)
+    const user = await this.userModel.findById(userId);
+    if (user.friends && user.friends.some(id => id.toString() === friendId.toString())) {
+      // Return user with populated friends
+      return this.userModel.findById(userId).populate('friends', '-__v').exec();
+    }
+
+    // Add friend to user's friends list
+    await this.userModel.findByIdAndUpdate(
+      userId,
+      { $addToSet: { friends: friendId } }, // Using $addToSet to avoid duplicates
+      { new: true }
+    );
+    
+    // Return the updated user with populated friends
+    return this.userModel.findById(userId).populate('friends', '-__v').exec();
   }
 }

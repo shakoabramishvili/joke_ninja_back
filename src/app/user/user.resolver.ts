@@ -10,6 +10,7 @@ import { LeaderboardResponse } from './dto/leaderboard-response';
 import { DeleteResponse } from './dto/delete-response';
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
 import { UploadService } from '../shared/services/upload.service';
+import { AddFriendInput } from './dto/add-friend.input';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -18,14 +19,21 @@ export class UserResolver {
     private readonly uploadService: UploadService
   ) {}
 
-  // @Mutation(() => User)
-  // createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
-  //   return this.userService.createUser(createUserInput);
-  // }
-
+  @UseGuards(JwtAuthGuard)
   @Query(() => [User], { name: 'users' })
-  findAll() {
-    return this.userService.findAll();
+  async findAll(
+    @GetUser() user: User,
+    @Args('search', { type: () => String, nullable: true }) search?: string,
+  ) {
+    if (search) {
+      // Check if search term meets minimum length requirement
+      if (search.length < 3) {
+        // Return empty array if search term is too short
+        return [];
+      }
+      return this.userService.findAllUsers(search, user?.id);
+    }
+    return this.userService.findAllUsers(undefined, user?.id);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -43,6 +51,7 @@ export class UserResolver {
   ) {
     return this.userService.getUserById(user.id);
   }
+  
   @UseGuards(JwtAuthGuard)
   @Query(() => LeaderboardResponse, {name: 'leaderboard'})
   getUserLeaderboard(
@@ -76,10 +85,12 @@ export class UserResolver {
     }
   }
 
-  // @Mutation(() => String)
-  // async singleUpload(
-  //   @Args('file', { type: () => GraphQLUpload }) file: FileUpload,
-  // ): Promise<string> {
-  //   return this.uploadService.uploadFile(file);
-  // }
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => User)
+  async addFriend(
+    @GetUser() user: User,
+    @Args('addFriendInput') addFriendInput: AddFriendInput,
+  ) {
+    return this.userService.addFriend(user.id, addFriendInput.friendId);
+  }
 }

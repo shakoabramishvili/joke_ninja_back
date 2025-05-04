@@ -34,9 +34,12 @@ export class AuthService {
   //   return null;
   // }
 
-  login(user: User) {
+  async login(user: User) {
+    // Get the user with populated friends to ensure proper ID serialization
+    const populatedUser = await this.userService.getUserById(user.id);
+    
     return {
-      user,
+      user: populatedUser,
       authToken: this.jwtService.sign(
         {
           sub: user.id,
@@ -110,10 +113,14 @@ export class AuthService {
       if (isUser.picture !== userInfo.picture) {
         updateFields.picture = userInfo.picture;
       }
+      if (fcmToken !== undefined) {
+        updateFields.fcmToken = fcmToken;
+      }
     
       if (Object.keys(updateFields).length > 0) {
         await this.userService.updateUser(isUser.id, updateFields);
       }
+      console.log(isUser, 'isUser');
       return this.login(isUser)
     }
 
@@ -125,7 +132,12 @@ export class AuthService {
       picture: userInfo.picture
     }
 
+    if (fcmToken !== undefined) {
+      createUserInput.fcmToken = fcmToken;
+    }
+
     const user = await this.userService.createUser(createUserInput)
+    console.log(user, 'user');
     return this.login(user)
   }
 }

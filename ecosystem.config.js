@@ -15,13 +15,13 @@ module.exports = {
           MONGODB_URI: 'jokeninja.hpyzm.mongodb.net',
           JWT_SECRET: 'fdsfdsfds',
         },
-        env_production: {               // Production environment variables
-          NODE_ENV: 'production',
-          MONGODB_USERNAME: 'your_production_username',  // Change these values accordingly
-          MONGODB_PASSWORD: 'your_production_password',
-          MONGODB_DATABASE_NAME: 'your_production_database_name',
-          MONGODB_URI: 'your_production_uri',
-          JWT_SECRET: 'your_production_jwt_secret',
+        env_production: {                          // Default environment (development)
+          NODE_ENV: 'development',
+          MONGODB_USERNAME: 'shalvaabramishvili',
+          MONGODB_PASSWORD: 'bkBXUZecNVFINJmF',
+          MONGODB_DATABASE_NAME: 'joke_ninja_dev',
+          MONGODB_URI: 'jokeninja.hpyzm.mongodb.net',
+          JWT_SECRET: 'fdsfdsfds',
         }
       }
     ]

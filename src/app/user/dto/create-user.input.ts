@@ -30,4 +30,8 @@ export class CreateUserInput {
   @Field(() => String)
   @IsOptional()
   myJoke?: string
+
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  fcmToken?: string;
 }
