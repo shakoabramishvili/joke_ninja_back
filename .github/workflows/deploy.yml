@@ -1,36 +1,37 @@
-name: Deploy to EC2
+name: Deploy to Droplet
 
 on:
   push:
     branches:
-      - dev  # Trigger on the 'dev' branch or other branches as needed
-  pull_request:
-    branches:
-      - dev
+      - dev  # Trigger deployment on 'dev' branch push
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4 # Use the latest version for compatibility
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-    - name: Deploy to EC2 via SSH
-      uses: appleboy/ssh-action@v0.1.6
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USER }}
-        key: ${{ secrets.EC2_SSH_KEY }}
-        port: 22
-        script: |
-          echo "SSH connection successful"
-          cd joke_ninja_back  # Update this path as necessary
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # Load nvm
-          nvm use 20.17.0 # Use the specific Node.js version
-          export PATH=$PATH:$NVM_DIR/versions/node/v20.17.0/bin  # Ensure correct PATH
-          git pull origin dev
-          yarn install
-          yarn build
-          pm2 start ecosystem.config.js --env development  # Use ecosystem.config.js to start the app
+      - name: Set up SSH Agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DO_SSH_PRIVATE_KEY }}
+
+      - name: Deploy to Droplet via SSH
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} << 'EOF'
+            echo "✅ Connected to Droplet"
+
+            cd /var/www/joke_ninja_back  
+
+            echo "📥 Pulling latest code..."
+            git pull origin dev
+
+            echo "🐳 Rebuilding and restarting Docker container..."
+            docker-compose down
+            docker-compose build
+            docker-compose up -d
+
+            echo "🚀 Deployment complete!"
+          EOF
