@@ -19,7 +19,8 @@ type User {
   rank: Int!
   picture: String
   myJoke: String
-  friends: [User!]
+  following: [User!]
+  followers: [User!]
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime

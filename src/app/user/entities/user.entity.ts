@@ -44,7 +44,11 @@ export class User {
 
   @Field(() => [User], { nullable: true })
   @Prop({ type: [{ type: MongooSchema.Types.ObjectId, ref: 'User' }], default: [] })
-  friends: User[];
+  following: User[];
+
+  @Field(() => [User], { nullable: true })
+  @Prop({ type: [{ type: MongooSchema.Types.ObjectId, ref: 'User' }], default: [] })
+  followers: User[];
 
   @Field(() => Date)
   @Prop({ default: Date.now })
