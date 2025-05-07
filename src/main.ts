@@ -8,7 +8,7 @@ async function bootstrap() {
   app.use(graphqlUploadExpress({ maxFileSize: 5000000, maxFiles: 10 }));
   app.useGlobalPipes(new ValidationPipe());
   
-  await app.listen(9000);
+  await app.listen(3000);
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();
