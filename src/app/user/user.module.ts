@@ -7,13 +7,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CommonModule } from '../common/common.module';
 import { DeletedUser, DeletedUserSchema } from './entities/deletedUser.entity';
 import { SharedModule } from '../shared/shared.module';
+import { Follower, FollowerSchema } from '../follower/entities/follower.entity';
 
 @Module({
   providers: [UserResolver, UserService, ConfigService],
   imports: [
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
-      { name: DeletedUser.name, schema: DeletedUserSchema }
+      { name: DeletedUser.name, schema: DeletedUserSchema },
+      { name: Follower.name, schema: FollowerSchema },
     ]),
     ConfigModule.forRoot({
       cache: true,

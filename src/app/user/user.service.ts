@@ -8,6 +8,7 @@ import { User, UserDocument } from './entities/user.entity';
 import { PaginationArgs } from '../common/dto/get-paginated.args';
 import { PaginationService } from '../common/pagination.service';
 import { DeletedUser, DeletedUserDocument } from './entities/deletedUser.entity';
+import { Follower, FollowerDocument } from '../follower/entities/follower.entity';
 
 @Injectable()
 export class UserService {
@@ -15,7 +16,9 @@ export class UserService {
     @InjectModel(User.name)
     private userModel: Model<UserDocument>,
     @InjectModel(DeletedUser.name)
-    private deletedUserModel: Model<DeletedUserDocument>
+    private deletedUserModel: Model<DeletedUserDocument>,
+    @InjectModel(Follower.name)
+    private followerModel: Model<FollowerDocument>,
   ) {}
 
   async sendPushNotification(expoPushToken: string, name: string) {
@@ -56,11 +59,6 @@ export class UserService {
 
   async getUserById(id: MongooSchema.Types.ObjectId) {
     const currentUser = await this.userModel.findById(id)
-      .populate([
-        { path: 'following', select: '-__v' },
-        { path: 'followers', select: '-__v' },
-      ]) // Populate friends with user data, excluding the __v field
-      .exec();
     
     if (!currentUser) {
       throw new Error('user_not_found');
@@ -97,10 +95,6 @@ export class UserService {
 
   async getUserLeaderboard(limit: number, user: User) {
     const users = await this.userModel.find()
-      .populate([
-        { path: 'following', select: '-__v' },
-        { path: 'followers', select: '-__v' },
-      ]) 
       .sort({ score: -1 })
       .limit(limit);
 
@@ -122,19 +116,19 @@ export class UserService {
   async findAllUsers(searchTerm?: string, currentUserId?: MongooSchema.Types.ObjectId) {
     let query: any = {};
     // Exclude the current user and their friends from results if currentUserId is provided
-    if (currentUserId) {
-      const currentUser = await this.userModel.findById(currentUserId);
-      if (currentUser) {
-        // Exclude both the current user and their friends
-        const excludeIds = [
-          currentUserId,
-          // ...(currentUser.followers || []),
-          // ...(currentUser.following || []),
-        ];
+    // if (currentUserId) {
+    //   const currentUser = await this.userModel.findById(currentUserId);
+    //   if (currentUser) {
+    //     // Exclude both the current user and their friends
+    //     const excludeIds = [
+    //       currentUserId,
+    //       // ...(currentUser.followers || []),
+    //       // ...(currentUser.following || []),
+    //     ];
         
-        query._id = { $nin: excludeIds };
-      }
-    }
+    //     query._id = { $nin: excludeIds };
+    //   }
+    // }
     
     if (searchTerm && searchTerm.length >= 3) {
       // Simple case-insensitive regex search
@@ -146,11 +140,21 @@ export class UserService {
       ];
     }
     
-    return this.userModel.find(query).populate([
-      { path: 'following', select: '-__v' },
-      { path: 'followers', select: '-__v' },
-    ]) 
+    const users =  await this.userModel.find(query)
     .sort({ name: 1 });
+
+    const followDocs = await this.followerModel.find({
+      follower: currentUserId,
+      following: { $in: users.map(u => u._id) }
+    }).select('following');
+    const followingIds = new Set(followDocs.map(f => f.following.toString()));
+
+    const usersWithFlag = users.map(user => ({
+      ...user,
+      isFollowing: followingIds.has(user._id.toString())
+    }));
+    console.log(usersWithFlag);
+    return usersWithFlag;
   }
 
   // async addFriend(userId: MongooSchema.Types.ObjectId, myName: string, friendId: MongooSchema.Types.ObjectId): Promise<User> {
