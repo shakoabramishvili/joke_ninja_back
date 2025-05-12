@@ -17,6 +17,7 @@ import {
 } from 'apollo-server-core';
 import { JokesModule } from './jokes/jokes.module';
 import { SharedModule } from './shared/shared.module';
+import { FollowerModule } from './follower/follower.module';
 
 @Module({
   imports: [
@@ -69,6 +70,7 @@ import { SharedModule } from './shared/shared.module';
     AuthModule,
     JokesModule,
     SharedModule,
+    FollowerModule
   ],
   providers: [],
 })

@@ -42,13 +42,21 @@ export class User {
   @Prop()
   myJoke: string;
 
-  @Field(() => [User], { nullable: true })
-  @Prop({ type: [{ type: MongooSchema.Types.ObjectId, ref: 'User' }], default: [] })
-  following: User[];
+  @Field(() => Int, { defaultValue: 0 })
+  @Prop({ default: 0 })
+  followerCount: number;
 
-  @Field(() => [User], { nullable: true })
-  @Prop({ type: [{ type: MongooSchema.Types.ObjectId, ref: 'User' }], default: [] })
-  followers: User[];
+  @Field(() => Int, { defaultValue: 0 })
+  @Prop({ default: 0 })
+  followingCount: number;
+
+  // @Field(() => [User], { nullable: true })
+  // @Prop({ type: [{ type: MongooSchema.Types.ObjectId, ref: 'User' }], default: [] })
+  // following: User[];
+
+  // @Field(() => [User], { nullable: true })
+  // @Prop({ type: [{ type: MongooSchema.Types.ObjectId, ref: 'User' }], default: [] })
+  // followers: User[];
 
   @Field(() => Date)
   @Prop({ default: Date.now })
@@ -65,15 +73,6 @@ export class User {
   @Field(() => String, { nullable: true })
   @Prop()
   fcmToken?: string;
-}
-
-@ObjectType()
-export class LoginUserResponseR {
-  @Field(() => User)
-  user: User;
-
-  @Field(() => String)
-  authToken: string;
 }
 
 @ObjectType()

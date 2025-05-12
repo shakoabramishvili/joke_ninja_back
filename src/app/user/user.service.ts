@@ -128,8 +128,8 @@ export class UserService {
         // Exclude both the current user and their friends
         const excludeIds = [
           currentUserId,
-          ...(currentUser.followers || []),
-          ...(currentUser.following || []),
+          // ...(currentUser.followers || []),
+          // ...(currentUser.following || []),
         ];
         
         query._id = { $nin: excludeIds };
@@ -153,46 +153,46 @@ export class UserService {
     .sort({ name: 1 });
   }
 
-  async addFriend(userId: MongooSchema.Types.ObjectId, myName: string, friendId: MongooSchema.Types.ObjectId): Promise<User> {
-    // Check if friend exists
-    const friendExists = await this.userModel.findById(friendId);
-    if (!friendExists) {
-      throw new Error('friend_not_found');
-    }
+  // async addFriend(userId: MongooSchema.Types.ObjectId, myName: string, friendId: MongooSchema.Types.ObjectId): Promise<User> {
+  //   // Check if friend exists
+  //   const friendExists = await this.userModel.findById(friendId);
+  //   if (!friendExists) {
+  //     throw new Error('friend_not_found');
+  //   }
     
-    // Send push notification if friend has fcmToken
-    if (friendExists.fcmToken) {
-      await this.sendPushNotification(friendExists.fcmToken, myName);
-    }
+  //   // Send push notification if friend has fcmToken
+  //   if (friendExists.fcmToken) {
+  //     await this.sendPushNotification(friendExists.fcmToken, myName);
+  //   }
 
-    // Check if already friends (to avoid duplicates)
-    const user = await this.userModel.findById(userId);
-    if (user.following && user.following.some(id => id.toString() === friendId.toString())) {
-      // Return user with populated friends
-      return this.userModel.findById(userId).populate([
-        { path: 'following', select: '-__v' },
-        { path: 'followers', select: '-__v' },
-      ]) 
-      .exec();
-    }
+  //   // Check if already friends (to avoid duplicates)
+  //   const user = await this.userModel.findById(userId);
+  //   if (user.following && user.following.some(id => id.toString() === friendId.toString())) {
+  //     // Return user with populated friends
+  //     return this.userModel.findById(userId).populate([
+  //       { path: 'following', select: '-__v' },
+  //       { path: 'followers', select: '-__v' },
+  //     ]) 
+  //     .exec();
+  //   }
 
-    // Add friend to user's friends list
-    await this.userModel.findByIdAndUpdate(
-      userId,
-      { $addToSet: { following: friendId } }, // Using $addToSet to avoid duplicates
-      { new: true }
-    );
-    await this.userModel.findByIdAndUpdate(
-      friendId,
-      { $addToSet: { followers: userId } }, // Using $addToSet to avoid duplicates
-      { new: true }
-    );
+  //   // Add friend to user's friends list
+  //   await this.userModel.findByIdAndUpdate(
+  //     userId,
+  //     { $addToSet: { following: friendId } }, // Using $addToSet to avoid duplicates
+  //     { new: true }
+  //   );
+  //   await this.userModel.findByIdAndUpdate(
+  //     friendId,
+  //     { $addToSet: { followers: userId } }, // Using $addToSet to avoid duplicates
+  //     { new: true }
+  //   );
     
-    // Return the updated user with populated friends
-    return this.userModel.findById(userId).populate([
-      { path: 'following', select: '-__v' },
-      { path: 'followers', select: '-__v' },
-    ]) 
-    .exec();
-  }
+  //   // Return the updated user with populated friends
+  //   return this.userModel.findById(userId).populate([
+  //     { path: 'following', select: '-__v' },
+  //     { path: 'followers', select: '-__v' },
+  //   ]) 
+  //   .exec();
+  // }
 }

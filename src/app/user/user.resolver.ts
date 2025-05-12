@@ -85,12 +85,12 @@ export class UserResolver {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Mutation(() => User)
-  async addFriend(
-    @GetUser() user: User,
-    @Args('addFriendInput') addFriendInput: AddFriendInput,
-  ) {
-    return this.userService.addFriend(user.id, user.name, addFriendInput.friendId);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Mutation(() => User)
+  // async addFriend(
+  //   @GetUser() user: User,
+  //   @Args('addFriendInput') addFriendInput: AddFriendInput,
+  // ) {
+  //   return this.userService.addFriend(user.id, user.name, addFriendInput.friendId);
+  // }
 }
