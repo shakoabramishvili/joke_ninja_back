@@ -1,14 +1,18 @@
+import { Model, Schema as MongooSchema } from 'mongoose';
+
+
 const sendPushNotification = async (
   expoPushToken: string,
   title: string,
   description: string,
+  userId?: MongooSchema.Types.ObjectId,
 ) => {
   const message = {
     to: expoPushToken,
     sound: 'default',
     title,
     body: description,
-    data: {},
+    data: {userId: userId},
   };
 
   await fetch('https://exp.host/--/api/v2/push/send', {
@@ -27,21 +31,25 @@ const sendPushNotification = async (
 export const sendFollowNotification = async (
   expoPushToken: string,
   name: string,
+  userId?: MongooSchema.Types.ObjectId,
 ) => {
   sendPushNotification(
     expoPushToken,
     `${name} is watching you`,
     'Make their life harder!',
+    userId
   );
 };
 
 export const sendCreateJokeNotification = async (
   expoPushToken: string,
   name: string,
+  userId?: MongooSchema.Types.ObjectId,
 ) => {
   sendPushNotification(
     expoPushToken,
     `${name}`,
     'Is boiling something!',
+    userId
   );
 };

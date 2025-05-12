@@ -56,7 +56,7 @@ export class JokesService {
     );
 
     for (const token of followerTokens) {
-      await sendCreateJokeNotification(token, user.name);
+      await sendCreateJokeNotification(token, user.name, user.id, );
     }
 
     return created;

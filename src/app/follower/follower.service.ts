@@ -42,7 +42,7 @@ export class FolloweService {
     const following = await this.userModel.findByIdAndUpdate(followingId, { $inc: {followerCount: 1}})
     console.log(follower);
 
-    await sendFollowNotification(following.fcmToken, follower.name);
+    await sendFollowNotification(following.fcmToken, follower.name, follower.id, );
     return following
   }
 
