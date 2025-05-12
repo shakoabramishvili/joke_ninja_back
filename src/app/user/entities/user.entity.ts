@@ -73,6 +73,9 @@ export class User {
   @Field(() => String, { nullable: true })
   @Prop()
   fcmToken?: string;
+
+  @Field(() => Boolean, { nullable: true })
+  isFollowing?: boolean;
 }
 
 @ObjectType()

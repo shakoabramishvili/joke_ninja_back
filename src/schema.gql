@@ -25,6 +25,7 @@ type User {
   updatedAt: DateTime!
   deletedAt: DateTime
   fcmToken: String
+  isFollowing: Boolean
 }
 
 """
