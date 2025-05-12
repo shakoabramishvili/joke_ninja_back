@@ -34,3 +34,14 @@ export const sendFollowNotification = async (
     'Make their life harder!',
   );
 };
+
+export const sendCreateJokeNotification = async (
+  expoPushToken: string,
+  name: string,
+) => {
+  sendPushNotification(
+    expoPushToken,
+    `${name} Boiled a Joke`,
+    'Make their life harder!',
+  );
+};

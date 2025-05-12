@@ -7,6 +7,7 @@ import { CommonModule } from '../common/common.module';
 import { UserModule } from '../user/user.module';
 import { User, UserSchema } from '../user/entities/user.entity';
 import { AnsweredJoke, AnsweredJokeSchema } from './entities/answeredJoke.entity';
+import { Follower, FollowerSchema } from '../follower/entities/follower.entity';
 
 @Module({
   providers: [JokesResolver, JokesService],
@@ -14,7 +15,8 @@ import { AnsweredJoke, AnsweredJokeSchema } from './entities/answeredJoke.entity
     MongooseModule.forFeature([
       { name: Joke.name, schema: JokeSchema }, 
       { name: User.name, schema: UserSchema },
-      { name: AnsweredJoke.name, schema: AnsweredJokeSchema}
+      { name: AnsweredJoke.name, schema: AnsweredJokeSchema},
+      { name: Follower.name, schema: FollowerSchema },
     ]),
     CommonModule
   ]

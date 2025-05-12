@@ -50,13 +50,9 @@ export class User {
   @Prop({ default: 0 })
   followingCount: number;
 
-  // @Field(() => [User], { nullable: true })
-  // @Prop({ type: [{ type: MongooSchema.Types.ObjectId, ref: 'User' }], default: [] })
-  // following: User[];
-
-  // @Field(() => [User], { nullable: true })
-  // @Prop({ type: [{ type: MongooSchema.Types.ObjectId, ref: 'User' }], default: [] })
-  // followers: User[];
+  @Field(() => Int, { defaultValue: 0 })
+  @Prop({ default: 0 })
+  jokeCount: number;
 
   @Field(() => Date)
   @Prop({ default: Date.now })

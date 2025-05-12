@@ -21,6 +21,7 @@ type User {
   myJoke: String
   followerCount: Int!
   followingCount: Int!
+  jokeCount: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime

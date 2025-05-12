@@ -17,6 +17,8 @@ import {
   AnsweredJokeSchema,
 } from './entities/answeredJoke.entity';
 import { userScore } from '../shared/scores/ScoresCounter';
+import { sendCreateJokeNotification } from '../shared/services/notificationSender/notificationSender';
+import { Follower, FollowerDocument } from '../follower/entities/follower.entity';
 
 @Injectable()
 export class JokesService {
@@ -28,6 +30,8 @@ export class JokesService {
     @InjectModel(AnsweredJoke.name)
     private answeredJokeModel: Model<AnsweredJokeDocument>,
     private readonly paginationService: PaginationService,
+    @InjectModel(Follower.name)
+    private followerModel: Model<FollowerDocument>,
   ) {}
   async create(createJokeInput: CreateJokeInput, user: User) {
     const createJoke = new this.jokeModel({
@@ -36,6 +40,26 @@ export class JokesService {
     });
 
     const created = await createJoke.save();
+    await this.userModel.findByIdAndUpdate(user.id, { $inc: {jokeCount: 1}})
+
+    const followDocs = await this.followerModel.find({
+      following: user.id,
+    }).populate({
+      path: 'follower',
+      select: 'fcmToken', // adjust fields as needed
+    });
+    
+    const followerTokens = new Set(
+      followDocs
+        .map(f => f.follower?.fcmToken)
+        .filter(token => typeof token === 'string' && token.trim() !== '')
+    );
+    console.log(followerTokens);
+
+    for (const token of followerTokens) {
+      await sendCreateJokeNotification(token, user.name);
+    }
+
     return created;
   }
 
