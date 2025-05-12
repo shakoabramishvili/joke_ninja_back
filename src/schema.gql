@@ -106,7 +106,7 @@ type Query {
   getCurrentUser: User!
   leaderboard(limit: Int!): LeaderboardResponse!
   jokes(first: Int, after: String, last: Int, before: String): PaginatedJokes!
-  myJokes(first: Int, after: String, last: Int, before: String): PaginatedJokes!
+  userJokes(first: Int, after: String, last: Int, before: String, id: ID!): PaginatedJokes!
   joke(id: ID!): Joke!
   publicSingleJoke(id: ID!): Joke!
   getFollowings: [User!]!

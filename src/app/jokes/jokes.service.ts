@@ -48,10 +48,13 @@ export class JokesService {
     return await this.paginationService.paginate(notInJokes, pagination);
   }
 
-  async findMyAllJokes(pagination: PaginationArgs, user: User) {
+  async findUserAllJokes(
+    pagination: PaginationArgs,
+    _id: MongooSchema.Types.ObjectId,
+  ) {
     const notInJokes = await this.jokeModel
       .find({
-        userId: user.id,
+        userId: _id,
       })
       .sort({ _id: -1 });
     return await this.paginationService.paginate(notInJokes, pagination);
