@@ -36,9 +36,12 @@ export class JokesResolver {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Query(() => PaginatedJokes, { name: 'myJokes' })
-  findMyJokes(@Args() args: PaginationArgs, @GetUser() user: User) {
-    return this.jokesService.findMyAllJokes(args, user);
+  @Query(() => PaginatedJokes, { name: 'userJokes' })
+  findUserJokes(
+    @Args() args: PaginationArgs,
+    @Args('id', { type: () => ID }) id: MongooSchema.Types.ObjectId,
+  ) {
+    return this.jokesService.findUserAllJokes(args, id);
   }
 
   @UseGuards(JwtAuthGuard)
