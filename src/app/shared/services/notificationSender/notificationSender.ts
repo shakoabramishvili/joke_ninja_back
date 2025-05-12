@@ -41,7 +41,7 @@ export const sendCreateJokeNotification = async (
 ) => {
   sendPushNotification(
     expoPushToken,
-    `${name} Boiled a Joke`,
-    'Make their life harder!',
+    `${name}`,
+    'Is boiling something!',
   );
 };

@@ -54,7 +54,6 @@ export class JokesService {
         .map(f => f.follower?.fcmToken)
         .filter(token => typeof token === 'string' && token.trim() !== '')
     );
-    console.log(followerTokens);
 
     for (const token of followerTokens) {
       await sendCreateJokeNotification(token, user.name);
