@@ -78,6 +78,12 @@ export class FolloweService {
       .exec();
     
     const result = followings.map(f => f.following); 
+    const followingIds = new Set(followings.map(f => f.following.id.toString()));
+
+    result.forEach((user: any) => {
+      user.isFollowing = followingIds.has(user._id.toString());
+    });
+    
     return result;
   }
 
@@ -88,7 +94,19 @@ export class FolloweService {
       .exec();
     
     const result = followers.map(f => f.follower); 
-    console.log(result);
+    
+    const followDocs = await this.followerModel.find({
+      follower: userId,
+      following: { $in: result.map(u => u.id) }
+    })
+    .select('following');
+    
+    const followingIds = new Set(followDocs.map(f => f.following.toString()));
+
+    
+    result.forEach((user: any) => {
+      user.isFollowing = followingIds.has(user._id.toString());
+    });
     return result;
   }
 }

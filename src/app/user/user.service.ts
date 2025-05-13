@@ -57,19 +57,29 @@ export class UserService {
     });
   }
 
-  async getUserById(id: MongooSchema.Types.ObjectId) {
-    const currentUser = await this.userModel.findById(id)
+  async getUserById(id: MongooSchema.Types.ObjectId, currentUserId?: MongooSchema.Types.ObjectId) {
+    const user = await this.userModel.findById(id)
     
-    if (!currentUser) {
+    if (!user) {
       throw new Error('user_not_found');
     }
     
     const userRank =
       (await this.userModel.countDocuments({
-        score: { $gt: currentUser.score },
+        score: { $gt: user.score },
       })) + 1;
-    currentUser.rank = userRank;
-    return currentUser;
+      user.rank = userRank;
+
+    const followDocs = await this.followerModel.find({
+      follower: currentUserId,
+      following: { $in: id }
+    }).select('following');
+
+    const followingIds = new Set(followDocs.map(f => f.following.toString()));
+    
+    user.isFollowing = followingIds.has(user._id.toString());
+   
+    return user;
   }
 
   updateUser(
@@ -144,47 +154,4 @@ export class UserService {
     return users;
 
   }
-
-  // async addFriend(userId: MongooSchema.Types.ObjectId, myName: string, friendId: MongooSchema.Types.ObjectId): Promise<User> {
-  //   // Check if friend exists
-  //   const friendExists = await this.userModel.findById(friendId);
-  //   if (!friendExists) {
-  //     throw new Error('friend_not_found');
-  //   }
-    
-  //   // Send push notification if friend has fcmToken
-  //   if (friendExists.fcmToken) {
-  //     await this.sendPushNotification(friendExists.fcmToken, myName);
-  //   }
-
-  //   // Check if already friends (to avoid duplicates)
-  //   const user = await this.userModel.findById(userId);
-  //   if (user.following && user.following.some(id => id.toString() === friendId.toString())) {
-  //     // Return user with populated friends
-  //     return this.userModel.findById(userId).populate([
-  //       { path: 'following', select: '-__v' },
-  //       { path: 'followers', select: '-__v' },
-  //     ]) 
-  //     .exec();
-  //   }
-
-  //   // Add friend to user's friends list
-  //   await this.userModel.findByIdAndUpdate(
-  //     userId,
-  //     { $addToSet: { following: friendId } }, // Using $addToSet to avoid duplicates
-  //     { new: true }
-  //   );
-  //   await this.userModel.findByIdAndUpdate(
-  //     friendId,
-  //     { $addToSet: { followers: userId } }, // Using $addToSet to avoid duplicates
-  //     { new: true }
-  //   );
-    
-  //   // Return the updated user with populated friends
-  //   return this.userModel.findById(userId).populate([
-  //     { path: 'following', select: '-__v' },
-  //     { path: 'followers', select: '-__v' },
-  //   ]) 
-  //   .exec();
-  // }
 }

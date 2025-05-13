@@ -12,7 +12,7 @@ const sendPushNotification = async (
     sound: 'default',
     title,
     body: description,
-    data: {userId: userId},
+    data: { userId: userId },
   };
 
   await fetch('https://exp.host/--/api/v2/push/send', {

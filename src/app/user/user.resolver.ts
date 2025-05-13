@@ -39,9 +39,10 @@ export class UserResolver {
   @UseGuards(JwtAuthGuard)
   @Query(() => User, {})
   getUserById(
+    @GetUser() user: User,
     @Args('id', { type: () => ID }) id: MongooSchema.Types.ObjectId,
   ) {
-    return this.userService.getUserById(id);
+    return this.userService.getUserById(id, user.id);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -84,13 +85,4 @@ export class UserResolver {
       return { success: false, message: error.message };
     }
   }
-
-  // @UseGuards(JwtAuthGuard)
-  // @Mutation(() => User)
-  // async addFriend(
-  //   @GetUser() user: User,
-  //   @Args('addFriendInput') addFriendInput: AddFriendInput,
-  // ) {
-  //   return this.userService.addFriend(user.id, user.name, addFriendInput.friendId);
-  // }
 }
