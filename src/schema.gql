@@ -111,8 +111,8 @@ type Query {
   userJokes(first: Int, after: String, last: Int, before: String, id: ID!): PaginatedJokes!
   joke(id: ID!): Joke!
   publicSingleJoke(id: ID!): Joke!
-  getFollowings: [User!]!
-  getFollowers: [User!]!
+  getFollowings(userId: ID!): [User!]!
+  getFollowers(userId: ID!): [User!]!
 }
 
 type Mutation {

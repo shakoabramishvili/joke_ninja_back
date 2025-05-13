@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 // import { AuthorService } from './author.service';
 // import { Author, GetAuthorsPaginatedResponse } from './entities/author.entity';
 // import { CreateAuthorInput } from './dto/create-author.input';
@@ -16,8 +16,7 @@ import { GetUser } from '../shared/decorators/current-user.decorator';
 import { User } from '../user/entities/user.entity';
 import { FollowInput } from './dto/follow.input';
 import { UnFollowInput } from './dto/unFollow.input';
-import { UnFollowResponse } from './dto/unFollow-response';
-import { FollowResponse } from './dto/follow-response';
+import { Schema as MongooSchema } from 'mongoose';
 
 @Resolver(() => Follower)
 export class FollowerResolver {
@@ -43,13 +42,19 @@ export class FollowerResolver {
 
   @UseGuards(JwtAuthGuard)
   @Query(() => [User])
-  async getFollowings(@GetUser() user: User) {
-    return this.followeService.getFollowings(user.id);
+  async getFollowings(
+    @GetUser() user: User,
+    @Args('userId', { type: () => ID }) userId: MongooSchema.Types.ObjectId,
+  ) {
+    return this.followeService.getFollowings(userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Query(() => [User])
-  async getFollowers(@GetUser() user: User) {
-    return this.followeService.getFollowers(user.id);
+  async getFollowers(
+    @GetUser() user: User,
+    @Args('userId', { type: () => ID }) userId: MongooSchema.Types.ObjectId,
+  ) {
+    return this.followeService.getFollowers(userId);
   }
 }
