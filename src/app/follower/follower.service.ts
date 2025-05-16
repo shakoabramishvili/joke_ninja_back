@@ -3,7 +3,7 @@ import { Follower, FollowerDocument } from './entities/follower.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Schema as MongooSchema } from 'mongoose';
 import { User, UserDocument } from '../user/entities/user.entity';
-import { sendFollowNotification } from '../shared/services/notificationSender/notificationSender';
+import { NotificationService, sendNotification } from '../notification/notification.service';
 
 
 @Injectable()
@@ -13,6 +13,7 @@ export class FolloweService {
     private followerModel: Model<FollowerDocument>,
     @InjectModel(User.name)
     private userModel: Model<UserDocument>,
+    private readonly notificationService: NotificationService
   ) {}
 
   async createFollower(followerId: MongooSchema.Types.ObjectId, followingId: MongooSchema.Types.ObjectId ) {
@@ -40,9 +41,14 @@ export class FolloweService {
     // Update follower/following counts
     const follower = await this.userModel.findByIdAndUpdate(followerId, { $inc: {followingCount: 1}})
     const following = await this.userModel.findByIdAndUpdate(followingId, { $inc: {followerCount: 1}})
-    console.log(follower);
+    
+    const notificationData: sendNotification = {
+      expoPushToken: following.fcmToken,
+      sender: follower,
+      reciever: following,
+    }
 
-    await sendFollowNotification(following.fcmToken, follower.name, follower.id, );
+    await this.notificationService.sendFollowNotification(notificationData);
     return following
   }
 

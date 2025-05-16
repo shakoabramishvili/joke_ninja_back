@@ -8,6 +8,7 @@ import { UserModule } from '../user/user.module';
 import { User, UserSchema } from '../user/entities/user.entity';
 import { AnsweredJoke, AnsweredJokeSchema } from './entities/answeredJoke.entity';
 import { Follower, FollowerSchema } from '../follower/entities/follower.entity';
+import { NotificationModule } from '../notification/notification.module';
 
 @Module({
   providers: [JokesResolver, JokesService],
@@ -18,7 +19,8 @@ import { Follower, FollowerSchema } from '../follower/entities/follower.entity';
       { name: AnsweredJoke.name, schema: AnsweredJokeSchema},
       { name: Follower.name, schema: FollowerSchema },
     ]),
-    CommonModule
+    CommonModule,
+    NotificationModule
   ]
 })
 export class JokesModule {}

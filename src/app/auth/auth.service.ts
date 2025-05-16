@@ -120,7 +120,7 @@ export class AuthService {
       if (Object.keys(updateFields).length > 0) {
         await this.userService.updateUser(isUser.id, updateFields);
       }
-      console.log(isUser, 'isUser');
+
       return this.login(isUser)
     }
 

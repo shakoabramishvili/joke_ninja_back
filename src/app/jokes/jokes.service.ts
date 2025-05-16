@@ -17,7 +17,7 @@ import {
   AnsweredJokeSchema,
 } from './entities/answeredJoke.entity';
 import { userScore } from '../shared/scores/ScoresCounter';
-import { sendCreateJokeNotification } from '../shared/services/notificationSender/notificationSender';
+import { NotificationService, sendNotification } from '../notification/notification.service';
 import { Follower, FollowerDocument } from '../follower/entities/follower.entity';
 
 @Injectable()
@@ -32,6 +32,7 @@ export class JokesService {
     private readonly paginationService: PaginationService,
     @InjectModel(Follower.name)
     private followerModel: Model<FollowerDocument>,
+    private readonly notificationService: NotificationService
   ) {}
   async create(createJokeInput: CreateJokeInput, user: User) {
     const createJoke = new this.jokeModel({
@@ -46,17 +47,23 @@ export class JokesService {
       following: user.id,
     }).populate({
       path: 'follower',
-      select: 'fcmToken', // adjust fields as needed
+      select: ['fcmToken', 'name'], // adjust fields as needed
     });
     
     const followerTokens = new Set(
       followDocs
-        .map(f => f.follower?.fcmToken)
-        .filter(token => typeof token === 'string' && token.trim() !== '')
+        .map(f => f.follower)
+        .filter(f => f != null)
     );
 
-    for (const token of followerTokens) {
-      await sendCreateJokeNotification(token, user.name, user.id, );
+    for (const follower of followerTokens) {
+      const notificationData: sendNotification = {
+        expoPushToken: follower.fcmToken,
+        sender: user,
+        reciever: follower,
+      }
+
+      await this.notificationService.sendCreateJokeNotification( notificationData );
     }
 
     return created;

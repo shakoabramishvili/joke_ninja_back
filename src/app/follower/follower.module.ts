@@ -5,6 +5,7 @@ import { FolloweService } from './follower.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Follower, FollowerSchema } from './entities/follower.entity';
 import { User, UserSchema } from '../user/entities/user.entity';
+import { NotificationModule } from '../notification/notification.module';
 
 @Module({
   providers: [FollowerResolver, FolloweService, ConfigService],
@@ -16,7 +17,7 @@ import { User, UserSchema } from '../user/entities/user.entity';
     ConfigModule.forRoot({
       cache: true,
     }),
-
+    NotificationModule
   ],
   // make sure the UserService is exported so that it's not longer private
   exports: [FolloweService],

@@ -12,11 +12,11 @@ export class Follower {
   id: MongooSchema.Types.ObjectId;
 
   @Prop({ type: MongooSchema.Types.ObjectId, ref: 'User', required: true })
-@Field(() => User)
+  @Field(() => User)
   following: User;
 
   @Prop({ type: MongooSchema.Types.ObjectId, ref: 'User', required: true })
-@Field(() => User)
+  @Field(() => User)
   follower: User;
 
   @Field(() => Date)
