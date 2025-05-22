@@ -25,12 +25,15 @@ export class Notifications {
 
   @Field(() => ID)
   @Prop({ type: MongooSchema.Types.ObjectId })
-  userId: MongooSchema.Types.ObjectId;; // who receives the notification
-
+  userId: MongooSchema.Types.ObjectId; // who receives the notification
   
   @Prop({ type: MongooSchema.Types.ObjectId, ref: 'User', required: false })
   @Field(() => User)
   sender: User; // who triggered the notification (optional)
+
+  @Field(() => ID, { nullable: true })
+  @Prop({ type: MongooSchema.Types.ObjectId })
+  jokeId: MongooSchema.Types.ObjectId;
 
   @Field({ defaultValue: false })
   @Prop({ default: false })

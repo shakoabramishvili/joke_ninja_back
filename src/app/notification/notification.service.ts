@@ -7,6 +7,7 @@ import { NotificationTypeEnum } from '../shared/enum/notificationType.enum';
 import { PaginationArgs } from '../common/dto/get-paginated.args';
 import { PaginationService } from '../common/pagination.service';
 import { MarkAsReadInput } from './dto/mark-as-read.input';
+import { Joke } from '../jokes/entities/joke.entity';
 
 export interface pushNotificationData extends sendNotification {
   title: string,
@@ -19,6 +20,7 @@ export interface sendNotification {
   expoPushToken: string,
   sender: User,
   reciever: User,
+  joke?: Joke
 }
 
 export interface messageInterface {
@@ -89,6 +91,7 @@ export class NotificationService {
       sender: sendNotification.sender.id,
       isRead: false,
       data: JSON.stringify(pushNotificationData),
+      jokeId: sendNotification.joke.id,
     });
 
     await notification.save();

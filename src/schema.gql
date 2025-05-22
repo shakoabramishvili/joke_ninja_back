@@ -104,6 +104,7 @@ type Notifications {
   message: String!
   userId: ID!
   sender: User!
+  jokeId: ID
   isRead: Boolean!
   data: String
   createdAt: DateTime!

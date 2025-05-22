@@ -61,6 +61,7 @@ export class JokesService {
         expoPushToken: follower.fcmToken,
         sender: user,
         reciever: follower,
+        joke: created,
       }
 
       await this.notificationService.sendCreateJokeNotification( notificationData );
