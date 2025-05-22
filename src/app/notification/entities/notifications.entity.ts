@@ -3,6 +3,7 @@ import { Document, Schema as MongooSchema } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Paginated } from "src/app/common/dto/pagination-result.type";
 import { NotificationTypeEnum } from "src/app/shared/enum/notificationType.enum";
+import { User } from "src/app/user/entities/user.entity";
 
 @ObjectType()
 @Schema({ timestamps: true })
@@ -26,9 +27,10 @@ export class Notifications {
   @Prop({ type: MongooSchema.Types.ObjectId })
   userId: MongooSchema.Types.ObjectId;; // who receives the notification
 
-  @Field(() => ID, { nullable: true })
-  @Prop({ nullable: true })
-  senderId?: MongooSchema.Types.ObjectId;; // who triggered the notification (optional)
+  
+  @Prop({ type: MongooSchema.Types.ObjectId, ref: 'User', required: false })
+  @Field(() => User)
+  sender: User; // who triggered the notification (optional)
 
   @Field({ defaultValue: false })
   @Prop({ default: false })

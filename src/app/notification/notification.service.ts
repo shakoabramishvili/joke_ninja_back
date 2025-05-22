@@ -86,7 +86,7 @@ export class NotificationService {
       title: pushNotificationData.title,
       message: pushNotificationData.body,
       userId: sendNotification.reciever.id,
-      senderId: sendNotification.sender.id,
+      sender: sendNotification.sender.id,
       isRead: false,
       data: JSON.stringify(pushNotificationData),
     });
@@ -135,6 +135,7 @@ export class NotificationService {
       .find({
         userId: _id,
       })
+      .populate('sender') 
       .sort({ _id: -1 });
 
     return await this.paginationService.paginate(notifications, pagination);

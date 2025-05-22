@@ -103,7 +103,7 @@ type Notifications {
   title: String!
   message: String!
   userId: ID!
-  senderId: ID
+  sender: User!
   isRead: Boolean!
   data: String
   createdAt: DateTime!
@@ -141,7 +141,7 @@ type Query {
   userJokes(first: Int, after: String, last: Int, before: String, id: ID!): PaginatedJokes!
   joke(id: ID!): Joke!
   publicSingleJoke(id: ID!): Joke!
-  userNotifications(first: Int, after: String, last: Int, before: String, id: ID!): PaginatedNotifications!
+  userNotifications(first: Int, after: String, last: Int, before: String): PaginatedNotifications!
   getFollowings(userId: ID!): [User!]!
   getFollowers(userId: ID!): [User!]!
 }

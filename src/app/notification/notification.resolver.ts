@@ -6,6 +6,8 @@ import { JwtAuthGuard } from "../shared/guards/jwt-auth.gards";
 import { PaginationArgs } from "../common/dto/get-paginated.args";
 import { Schema as MongooSchema } from 'mongoose';
 import { MarkAsReadInput } from "./dto/mark-as-read.input";
+import { GetUser } from "../shared/decorators/current-user.decorator";
+import { User } from "../user/entities/user.entity";
 
 @Resolver(() => Notifications)
 export class NotificationResolver {
@@ -15,10 +17,10 @@ export class NotificationResolver {
   @Query(() => PaginatedNotifications, { name: 'userNotifications' })
   findUserNotifications(
     @Args() args: PaginationArgs,
-    @Args('id', { type: () => ID }) id: MongooSchema.Types.ObjectId,
+    @GetUser() user: User,
   ) {
 
-    return this.notificationService.findUserNotifications(args, id);
+    return this.notificationService.findUserNotifications(args, user.id);
   }
 
   @UseGuards(JwtAuthGuard)
