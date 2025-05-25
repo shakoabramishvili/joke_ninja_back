@@ -28,7 +28,7 @@ export class Notifications {
   userId: MongooSchema.Types.ObjectId; // who receives the notification
   
   @Prop({ type: MongooSchema.Types.ObjectId, ref: 'User', required: false })
-  @Field(() => User)
+  @Field(() => User, { nullable: true })
   sender: User; // who triggered the notification (optional)
 
   @Field(() => ID, { nullable: true })

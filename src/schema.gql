@@ -103,7 +103,7 @@ type Notifications {
   title: String!
   message: String!
   userId: ID!
-  sender: User!
+  sender: User
   jokeId: ID
   isRead: Boolean!
   data: String
