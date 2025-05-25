@@ -19,27 +19,8 @@ export class UserService {
     private deletedUserModel: Model<DeletedUserDocument>,
     @InjectModel(Follower.name)
     private followerModel: Model<FollowerDocument>,
+    private readonly paginationService: PaginationService,
   ) {}
-
-  // async sendPushNotification(expoPushToken: string, name: string) {
-  //   const message = {
-  //     to: expoPushToken,
-  //     sound: 'default',
-  //     title: `${name} is watching you`,
-  //     body: 'Prove that you are the best Ninja!',
-  //     data: { },
-  //   };
-
-  //   const x = await fetch('https://exp.host/--/api/v2/push/send', {
-  //     method: 'POST',
-  //     headers: {
-  //       Accept: 'application/json',
-  //       'Accept-encoding': 'gzip, deflate',
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify(message),
-  //   }).then(res => res.json()).then(data => console.log(data));
-  // }
 
   async createUser(createUserInput: CreateUserInput) {
     const createdUser = new this.userModel(createUserInput);
@@ -103,10 +84,12 @@ export class UserService {
     return await this.userModel.deleteOne({ _id: id });
   }
 
-  async getUserLeaderboard(limit: number, user: User) {
+  async getUserLeaderboard(pagination: PaginationArgs, limit: number, user: User) {
     const users = await this.userModel.find()
       .sort({ score: -1 })
       .limit(limit);
+
+    const paginatedUsers = await this.paginationService.paginate(users as unknown as { _id: any }[], pagination);
 
     const currentUser = await this.userModel.findOne(
       { _id: user.id },
@@ -118,12 +101,12 @@ export class UserService {
       })) + 1;
 
     return {
-      users,
+      users: paginatedUsers,
       currentUserRank: userRank,
     };
   }
 
-  async findAllUsers(searchTerm?: string, currentUserId?: MongooSchema.Types.ObjectId) {
+  async findAllUsers(pagination: PaginationArgs, searchTerm?: string, currentUserId?: MongooSchema.Types.ObjectId) {
     let query: any = {};
     
     if (searchTerm && searchTerm.length >= 3) {
@@ -151,7 +134,6 @@ export class UserService {
       user.isFollowing = followingIds.has(user._id.toString());
     });
 
-    return users;
-
+    return await this.paginationService.paginate(users as unknown as { _id: any }[], pagination);
   }
 }

@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
 import { UserService } from './user.service';
-import { User } from './entities/user.entity';
+import { PaginatedUsers, User } from './entities/user.entity';
 import { UpdateUserInput } from './dto/update-user.input';
 import { Schema as MongooSchema } from 'mongoose';
 import { JwtAuthGuard } from '../shared/guards/jwt-auth.gards';
@@ -11,6 +11,7 @@ import { DeleteResponse } from './dto/delete-response';
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
 import { UploadService } from '../shared/services/upload.service';
 import { AddFriendInput } from './dto/add-friend.input';
+import { PaginationArgs } from '../common/dto/get-paginated.args';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -20,9 +21,10 @@ export class UserResolver {
   ) {}
 
   @UseGuards(JwtAuthGuard)
-  @Query(() => [User], { name: 'users' })
+  @Query(() => PaginatedUsers, { name: 'users' })
   async findAll(
     @GetUser() user: User,
+    @Args() args: PaginationArgs,
     @Args('search', { type: () => String, nullable: true }) search?: string,
   ) {
     if (search) {
@@ -31,9 +33,9 @@ export class UserResolver {
         // Return empty array if search term is too short
         return [];
       }
-      return this.userService.findAllUsers(search, user?.id);
+      return this.userService.findAllUsers(args, search, user?.id);
     }
-    return this.userService.findAllUsers(undefined, user?.id);
+    return this.userService.findAllUsers(args, undefined, user?.id);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -56,10 +58,11 @@ export class UserResolver {
   @UseGuards(JwtAuthGuard)
   @Query(() => LeaderboardResponse, {name: 'leaderboard'})
   getUserLeaderboard(
+    @Args() args: PaginationArgs,
     @Args('limit', { type: () => Int }) limit: number,
     @GetUser() user: User
   ) {
-    return this.userService.getUserLeaderboard(limit, user);
+    return this.userService.getUserLeaderboard(args, limit, user);
   }
 
   @UseGuards(JwtAuthGuard)

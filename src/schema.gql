@@ -34,17 +34,48 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type Follower {
+type PaginatedUsers {
+  edges: [UserEdge!]
+  pageInfo: PageInfo
+}
+
+type UserEdge {
+  cursor: String!
+  node: User!
+}
+
+type UserFromFollower {
   id: ID!
-  following: User!
-  follower: User!
+  name: String
+  email: String!
+  externalId: String!
+  externalType: String!
+  score: Int!
+  rank: Int!
+  picture: String
+  myJoke: String
+  followerCount: Int!
+  followingCount: Int!
+  jokeCount: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
+  fcmToken: String
+  isFollowing: Boolean
+}
+
+type PaginatedFollower {
+  edges: [UserFromFollowerEdge!]
+  pageInfo: PageInfo
+}
+
+type UserFromFollowerEdge {
+  cursor: String!
+  node: UserFromFollower!
 }
 
 type LeaderboardResponse {
-  users: [User!]!
+  users: PaginatedUsers!
   currentUserRank: Int!
 }
 
@@ -134,17 +165,17 @@ type JokeResponse {
 }
 
 type Query {
-  users(search: String): [User!]!
+  users(first: Int, after: String, last: Int, before: String, search: String): PaginatedUsers!
   getUserById(id: ID!): User!
   getCurrentUser: User!
-  leaderboard(limit: Int!): LeaderboardResponse!
+  leaderboard(first: Int, after: String, last: Int, before: String, limit: Int!): LeaderboardResponse!
   jokes(first: Int, after: String, last: Int, before: String): PaginatedJokes!
   userJokes(first: Int, after: String, last: Int, before: String, id: ID!): PaginatedJokes!
   joke(id: ID!): Joke!
   publicSingleJoke(id: ID!): Joke!
   userNotifications(first: Int, after: String, last: Int, before: String): PaginatedNotifications!
-  getFollowings(userId: ID!): [User!]!
-  getFollowers(userId: ID!): [User!]!
+  followings(userId: ID!, first: Int, after: String, last: Int, before: String): PaginatedFollower!
+  followers(userId: ID!, first: Int, after: String, last: Int, before: String): PaginatedFollower!
 }
 
 type Mutation {
