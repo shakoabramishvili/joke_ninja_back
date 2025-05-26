@@ -1,10 +1,10 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
-import { User } from "../entities/user.entity";
+import { PaginatedUsers, User } from "../entities/user.entity";
 
 @ObjectType()
 export class LeaderboardResponse {
-  @Field(() => [User])
-  users: User[];
+  @Field(() => PaginatedUsers)
+  users: PaginatedUsers;
 
   @Field(() => Int)
   currentUserRank: number;

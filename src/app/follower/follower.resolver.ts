@@ -1,14 +1,5 @@
 import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
-// import { AuthorService } from './author.service';
-// import { Author, GetAuthorsPaginatedResponse } from './entities/author.entity';
-// import { CreateAuthorInput } from './dto/create-author.input';
-// import { UpdateAuthorInput } from './dto/update-author.input';
-// import { Schema as MongooSchema } from 'mongoose';
-// import { PaginationArgs } from '../common/dto/get-paginated.args';
-// import { JwtAuthGuard } from '../auth/jwt-auth.gards';
-// import { UseGuards } from '@nestjs/common';
-
-import { Follower } from "./entities/follower.entity";
+import { Follower, PaginatedFollower } from "./entities/follower.entity";
 import { FolloweService } from './follower.service';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../shared/guards/jwt-auth.gards';
@@ -17,6 +8,7 @@ import { User } from '../user/entities/user.entity';
 import { FollowInput } from './dto/follow.input';
 import { UnFollowInput } from './dto/unFollow.input';
 import { Schema as MongooSchema } from 'mongoose';
+import { PaginationArgs } from '../common/dto/get-paginated.args';
 
 @Resolver(() => Follower)
 export class FollowerResolver {
@@ -41,20 +33,22 @@ export class FollowerResolver {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Query(() => [User])
+  @Query(() => PaginatedFollower, { name: 'followings' })
   async getFollowings(
     @GetUser() user: User,
     @Args('userId', { type: () => ID }) userId: MongooSchema.Types.ObjectId,
+    @Args() args: PaginationArgs,
   ) {
-    return this.followeService.getFollowings(userId);
+    return this.followeService.getFollowings(args, userId);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Query(() => [User])
+  @Query(() => PaginatedFollower, { name: 'followers' })
   async getFollowers(
     @GetUser() user: User,
     @Args('userId', { type: () => ID }) userId: MongooSchema.Types.ObjectId,
+    @Args() args: PaginationArgs,
   ) {
-    return this.followeService.getFollowers(userId);
+    return this.followeService.getFollowers(args, userId);
   }
 }

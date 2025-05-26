@@ -3,6 +3,7 @@ import { Document, Schema as MongooSchema } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { User } from 'src/app/user/entities/user.entity';
 import { Paginated } from 'src/app/common/dto/pagination-result.type';
+import { UserFromFollower } from '../userFromFollower.service';
 // import { Book } from 'src/app/book/entities/book.entity';
 
 @ObjectType()
@@ -33,7 +34,7 @@ export class Follower {
 }
 
 @ObjectType()
-export class PaginatedFollower extends Paginated(Follower) {}
+export class PaginatedFollower extends Paginated(UserFromFollower) {}
 
 export type FollowerDocument = Follower & Document;
 export const FollowerSchema = SchemaFactory.createForClass(Follower);

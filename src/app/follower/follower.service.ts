@@ -7,6 +7,8 @@ import {
   NotificationService,
   sendNotification,
 } from '../notification/notification.service';
+import { PaginationArgs } from '../common/dto/get-paginated.args';
+import { PaginationService } from '../common/pagination.service';
 
 @Injectable()
 export class FolloweService {
@@ -16,6 +18,7 @@ export class FolloweService {
     @InjectModel(User.name)
     private userModel: Model<UserDocument>,
     private readonly notificationService: NotificationService,
+    private readonly paginationService: PaginationService,
   ) {}
 
   async createFollower(
@@ -91,7 +94,7 @@ export class FolloweService {
     return following;
   }
 
-  async getFollowings(userId: MongooSchema.Types.ObjectId) {
+  async getFollowings(pagination: PaginationArgs, userId: MongooSchema.Types.ObjectId) {
     const followings = await this.followerModel
       .find({ follower: userId, deleted_at: { $eq: null } })
       .populate('following')
@@ -106,10 +109,10 @@ export class FolloweService {
       user.isFollowing = followingIds.has(user._id.toString());
     });
 
-    return result;
+    return await this.paginationService.paginate(result as unknown as { _id: any }[], pagination);
   }
 
-  async getFollowers(userId: MongooSchema.Types.ObjectId) {
+  async getFollowers(pagination: PaginationArgs, userId: MongooSchema.Types.ObjectId) {
     const followers = await this.followerModel
       .find({ following: userId, deleted_at: { $eq: null } })
       .populate('follower')
@@ -129,6 +132,7 @@ export class FolloweService {
     result.forEach((user: any) => {
       user.isFollowing = followingIds.has(user._id.toString());
     });
-    return result;
+
+    return await this.paginationService.paginate(result as unknown as { _id: any }[], pagination);
   }
 }
