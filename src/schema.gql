@@ -44,34 +44,14 @@ type UserEdge {
   node: User!
 }
 
-type UserFromFollower {
-  id: ID!
-  name: String
-  email: String!
-  externalId: String!
-  externalType: String!
-  score: Int!
-  rank: Int!
-  picture: String
-  myJoke: String
-  followerCount: Int!
-  followingCount: Int!
-  jokeCount: Int!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime
-  fcmToken: String
-  isFollowing: Boolean
+type FollowerUserEdge {
+  cursor: String!
+  node: User!
 }
 
 type PaginatedFollower {
-  edges: [UserFromFollowerEdge!]
-  pageInfo: PageInfo
-}
-
-type UserFromFollowerEdge {
-  cursor: String!
-  node: UserFromFollower!
+  edges: [FollowerUserEdge!]!
+  pageInfo: PageInfo!
 }
 
 type LeaderboardResponse {

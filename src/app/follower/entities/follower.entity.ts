@@ -2,7 +2,7 @@ import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
 import { Document, Schema as MongooSchema } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { User } from 'src/app/user/entities/user.entity';
-import { Paginated } from 'src/app/common/dto/pagination-result.type';
+import { EdgeType, PageInfo } from 'src/app/common/dto/pagination-result.type';
 import { UserFromFollower } from '../userFromFollower.service';
 // import { Book } from 'src/app/book/entities/book.entity';
 
@@ -33,8 +33,23 @@ export class Follower {
   deletedAt?: Date;
 }
 
+@ObjectType('FollowerUserEdge')
+export class FollowerUserEdge extends EdgeType<User> {
+  @Field(() => String)
+  cursor: string;
+
+  @Field(() => User)
+  node: User;
+}
+
 @ObjectType()
-export class PaginatedFollower extends Paginated(UserFromFollower) {}
+export class PaginatedFollower {
+  @Field(() => [FollowerUserEdge])
+  edges: FollowerUserEdge[];
+
+  @Field(() => PageInfo)
+  pageInfo: PageInfo;
+}
 
 export type FollowerDocument = Follower & Document;
 export const FollowerSchema = SchemaFactory.createForClass(Follower);
