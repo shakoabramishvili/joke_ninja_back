@@ -11,6 +11,10 @@ export const userScore = (answers: Answer[], choosen: number) => {
   const total = countScore(answers);
   const aScore = answers[choosen].clickCount;
 
+ // Avoid division by zero
+  if (total === 0) {
+    return 10; // or return some default value if needed
+  }
   const ratio = aScore / total;
   const minScore = -5;
   const maxScore = 10;
