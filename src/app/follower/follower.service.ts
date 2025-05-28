@@ -64,7 +64,7 @@ export class FolloweService {
     following.isFollowing = true;
     
     return {
-      cursor: follower.id,
+      cursor: following.id,
       node: following
     };
   }
@@ -96,7 +96,7 @@ export class FolloweService {
 
     following.isFollowing = false;
     return {
-      cursor: follower.id,
+      cursor: following.id,
       node: following
     };
   }
