@@ -167,8 +167,8 @@ type Mutation {
   createJoke(createJokeInput: CreateJokeInput!): JokeMutationEdge!
   updateJoke(updateJokeInput: UpdateJokeInput!): JokeResponse!
   MarkAsReadInput(MarkAsReadInput: MarkAsReadInput!): Boolean!
-  follow(followInput: FollowInput!): User!
-  unFollow(unFollowInput: UnFollowInput!): User!
+  follow(followInput: FollowInput!): FollowerUserEdge!
+  unFollow(unFollowInput: UnFollowInput!): FollowerUserEdge!
 }
 
 input UpdateUserInput {

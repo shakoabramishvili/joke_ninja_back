@@ -62,7 +62,11 @@ export class FolloweService {
 
     await this.notificationService.sendFollowNotification(notificationData);
     following.isFollowing = true;
-    return following;
+    
+    return {
+      cursor: follower.id,
+      node: following
+    };
   }
 
   async unFollow(
@@ -91,7 +95,10 @@ export class FolloweService {
     });
 
     following.isFollowing = false;
-    return following;
+    return {
+      cursor: follower.id,
+      node: following
+    };
   }
 
   async getFollowings(pagination: PaginationArgs, userId: MongooSchema.Types.ObjectId) {
