@@ -66,7 +66,7 @@ export class FolloweService {
 
     return {
       following,
-      followEdge: {
+      followerEdge: {
         cursor: following.id,
         node: following,
       },
