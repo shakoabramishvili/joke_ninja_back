@@ -95,12 +95,7 @@ export class FolloweService {
     });
 
     following.isFollowing = false;
-    return {
-      cursor: following.id,
-      id: following.id,
-      __id: following.id,
-      node: following,
-    };
+    return following;
   }
 
   async getFollowings(
