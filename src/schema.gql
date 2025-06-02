@@ -55,8 +55,8 @@ type PaginatedFollower {
 }
 
 type FollowResult {
-  following: User!
-  followerEdge: FollowerUserEdge!
+  follower: User!
+  followingEdge: FollowerUserEdge!
 }
 
 type LeaderboardResponse {

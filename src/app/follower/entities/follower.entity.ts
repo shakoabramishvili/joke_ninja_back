@@ -54,10 +54,10 @@ export class PaginatedFollower {
 @ObjectType()
 export class FollowResult {
   @Field(() => User)
-  following: User;
+  follower: User;
 
   @Field(() => FollowerUserEdge)
-  followerEdge: FollowerUserEdge;
+  followingEdge: FollowerUserEdge;
 }
 
 export type FollowerDocument = Follower & Document;
