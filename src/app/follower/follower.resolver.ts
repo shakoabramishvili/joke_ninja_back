@@ -31,7 +31,7 @@ export class FollowerResolver {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Mutation(() => User)
+  @Mutation(() => ({ follower: User, following: User }))
   async unFollow(
     @GetUser() user: User,
     @Args('unFollowInput') unFollowInput: UnFollowInput,

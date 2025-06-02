@@ -95,7 +95,9 @@ export class FolloweService {
     });
 
     following.isFollowing = false;
-    return following;
+    following.followerCount -= 1;
+    follower.followingCount -= 1;
+    return { follower, following };
   }
 
   async getFollowings(
