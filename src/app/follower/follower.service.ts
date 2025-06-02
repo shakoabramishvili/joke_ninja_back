@@ -62,10 +62,10 @@ export class FolloweService {
 
     await this.notificationService.sendFollowNotification(notificationData);
     following.isFollowing = true;
-    
+
     return {
       cursor: following.id,
-      node: following
+      node: following,
     };
   }
 
@@ -97,11 +97,16 @@ export class FolloweService {
     following.isFollowing = false;
     return {
       cursor: following.id,
-      node: following
+      id: following.id,
+      __id: following.id,
+      node: following,
     };
   }
 
-  async getFollowings(pagination: PaginationArgs, userId: MongooSchema.Types.ObjectId) {
+  async getFollowings(
+    pagination: PaginationArgs,
+    userId: MongooSchema.Types.ObjectId,
+  ) {
     const followings = await this.followerModel
       .find({ follower: userId, deleted_at: { $eq: null } })
       .populate('following')
@@ -116,10 +121,16 @@ export class FolloweService {
       user.isFollowing = followingIds.has(user._id.toString());
     });
 
-    return await this.paginationService.paginate(result as unknown as { _id: any }[], pagination);
+    return await this.paginationService.paginate(
+      result as unknown as { _id: any }[],
+      pagination,
+    );
   }
 
-  async getFollowers(pagination: PaginationArgs, userId: MongooSchema.Types.ObjectId) {
+  async getFollowers(
+    pagination: PaginationArgs,
+    userId: MongooSchema.Types.ObjectId,
+  ) {
     const followers = await this.followerModel
       .find({ following: userId, deleted_at: { $eq: null } })
       .populate('follower')
@@ -140,6 +151,9 @@ export class FolloweService {
       user.isFollowing = followingIds.has(user._id.toString());
     });
 
-    return await this.paginationService.paginate(result as unknown as { _id: any }[], pagination);
+    return await this.paginationService.paginate(
+      result as unknown as { _id: any }[],
+      pagination,
+    );
   }
 }
