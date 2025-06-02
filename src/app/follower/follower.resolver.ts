@@ -11,6 +11,7 @@ import { GetUser } from '../shared/decorators/current-user.decorator';
 import { User } from '../user/entities/user.entity';
 import { FollowInput } from './dto/follow.input';
 import { UnFollowInput } from './dto/unFollow.input';
+import { UnFollowResponse } from './dto/unFollow-response';
 import { Schema as MongooSchema } from 'mongoose';
 import { PaginationArgs } from '../common/dto/get-paginated.args';
 
@@ -31,7 +32,7 @@ export class FollowerResolver {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Mutation(() => ({ follower: User, following: User }))
+  @Mutation(() => UnFollowResponse)
   async unFollow(
     @GetUser() user: User,
     @Args('unFollowInput') unFollowInput: UnFollowInput,

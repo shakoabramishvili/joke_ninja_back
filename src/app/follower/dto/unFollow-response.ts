@@ -1,10 +1,11 @@
-import { Field, ObjectType } from "@nestjs/graphql";
+import { Field, ObjectType } from '@nestjs/graphql';
+import { User } from '../../user/entities/user.entity';
 
 @ObjectType()
 export class UnFollowResponse {
-  @Field()
-  success: boolean;
+  @Field(() => User)
+  follower: User;
 
-  @Field({ nullable: true })
-  message?: string;
+  @Field(() => User)
+  following: User;
 }
