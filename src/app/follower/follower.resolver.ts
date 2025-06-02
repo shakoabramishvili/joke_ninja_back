@@ -1,5 +1,9 @@
 import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
-import { Follower, FollowerUserEdge, PaginatedFollower } from "./entities/follower.entity";
+import {
+  Follower,
+  FollowerUserEdge,
+  PaginatedFollower,
+} from './entities/follower.entity';
 import { FolloweService } from './follower.service';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../shared/guards/jwt-auth.gards';
@@ -20,16 +24,22 @@ export class FollowerResolver {
     @GetUser() user: User,
     @Args('followInput') followInput: FollowInput,
   ) {
-      return await this.followeService.createFollower(user.id, followInput.followingId);
+    return await this.followeService.createFollower(
+      user.id,
+      followInput.followingId,
+    );
   }
 
   @UseGuards(JwtAuthGuard)
-  @Mutation(() => FollowerUserEdge)
+  @Mutation(() => User)
   async unFollow(
     @GetUser() user: User,
     @Args('unFollowInput') unFollowInput: UnFollowInput,
   ) {
-      return await this.followeService.unFollow(user.id, unFollowInput.unFollowingId);
+    return await this.followeService.unFollow(
+      user.id,
+      unFollowInput.unFollowingId,
+    );
   }
 
   @UseGuards(JwtAuthGuard)
