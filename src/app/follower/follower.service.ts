@@ -62,6 +62,7 @@ export class FolloweService {
 
     await this.notificationService.sendFollowNotification(notificationData);
     following.isFollowing = true;
+    following.followerCount += 1;
 
     return {
       cursor: following.id,
