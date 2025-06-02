@@ -51,5 +51,14 @@ export class PaginatedFollower {
   pageInfo: PageInfo;
 }
 
+@ObjectType()
+export class FollowResult {
+  @Field(() => User)
+  following: User;
+
+  @Field(() => FollowerUserEdge)
+  followerEdge: FollowerUserEdge;
+}
+
 export type FollowerDocument = Follower & Document;
 export const FollowerSchema = SchemaFactory.createForClass(Follower);

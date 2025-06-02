@@ -14,13 +14,14 @@ import { UnFollowInput } from './dto/unFollow.input';
 import { UnFollowResponse } from './dto/unFollow-response';
 import { Schema as MongooSchema } from 'mongoose';
 import { PaginationArgs } from '../common/dto/get-paginated.args';
+import { FollowResult } from './entities/follower.entity';
 
 @Resolver(() => Follower)
 export class FollowerResolver {
   constructor(private readonly followeService: FolloweService) {}
 
   @UseGuards(JwtAuthGuard)
-  @Mutation(() => FollowerUserEdge)
+  @Mutation(() => FollowResult)
   async follow(
     @GetUser() user: User,
     @Args('followInput') followInput: FollowInput,

@@ -54,6 +54,11 @@ type PaginatedFollower {
   pageInfo: PageInfo!
 }
 
+type FollowResult {
+  following: User!
+  followerEdge: FollowerUserEdge!
+}
+
 type LeaderboardResponse {
   users: PaginatedUsers!
   currentUserRank: Int!
@@ -172,7 +177,7 @@ type Mutation {
   createJoke(createJokeInput: CreateJokeInput!): JokeMutationEdge!
   updateJoke(updateJokeInput: UpdateJokeInput!): JokeResponse!
   MarkAsReadInput(MarkAsReadInput: MarkAsReadInput!): Boolean!
-  follow(followInput: FollowInput!): FollowerUserEdge!
+  follow(followInput: FollowInput!): FollowResult!
   unFollow(unFollowInput: UnFollowInput!): UnFollowResponse!
 }
 

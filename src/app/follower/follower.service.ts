@@ -65,8 +65,11 @@ export class FolloweService {
     following.followerCount += 1;
 
     return {
-      cursor: following.id,
-      node: following,
+      following,
+      followEdge: {
+        cursor: following.id,
+        node: following,
+      },
     };
   }
 
