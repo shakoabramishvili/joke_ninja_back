@@ -122,7 +122,7 @@ export class NotificationService {
       title: pushNotificationData.title,
       message: pushNotificationData.body,
       userId: sendNotification.reciever.id,
-      senderId: sendNotification.sender.id,
+      sender: sendNotification.sender.id,
       isRead: false,
       data: JSON.stringify(pushNotificationData),
     });

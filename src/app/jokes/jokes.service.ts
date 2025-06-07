@@ -75,6 +75,7 @@ export class JokesService {
 
     const notInJokes = await this.jokeModel.find({
       _id: { $nin: answeredJokesId },
+      userId: { $ne: user.id }, // Exclude jokes created by the current user
     });
     return await this.paginationService.paginate(notInJokes, pagination);
   }
@@ -108,6 +109,14 @@ export class JokesService {
     const { id, answerIndex } = updateJokeInput;
 
     const joke = await this.findOne(id);
+    
+    if (joke.userId.toString() == user.id.toString()) {
+      return {
+        joke: joke,
+        userScored: 0,
+        userRank: user.rank,
+      };
+    }
 
     const score = userScore(joke.answers, answerIndex);
 

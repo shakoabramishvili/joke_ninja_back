@@ -66,6 +66,16 @@ export class UserResolver {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Query(() => LeaderboardResponse, {name: 'LocalLeaderboard'})
+  getUserLocalLeaderboard(
+    @Args() args: PaginationArgs,
+    @Args('limit', { type: () => Int }) limit: number,
+    @GetUser() user: User
+  ) {
+    return this.userService.getUserLocalLeaderboard(args, limit, user);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => User)
   async updateUser(
     @Args('updateUserInput') updateUserInput: UpdateUserInput,

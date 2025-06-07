@@ -119,9 +119,16 @@ export class FolloweService {
       followings.map((f) => f.following.id.toString()),
     );
 
-    result.forEach((user: any) => {
-      user.isFollowing = followingIds.has(user._id.toString());
-    });
+     for (const user of result) {
+      const userRank =
+        (await this.userModel.countDocuments({
+          score: { $gt: user.score },
+        })) + 1;
+      user.rank = userRank;
+      user.isFollowing = followingIds.has(user.id.toString());
+    }
+
+    result.sort((a, b) => a.rank - b.rank);
 
     return await this.paginationService.paginate(
       result as unknown as { _id: any }[],
@@ -149,10 +156,17 @@ export class FolloweService {
 
     const followingIds = new Set(followDocs.map((f) => f.following.toString()));
 
-    result.forEach((user: any) => {
-      user.isFollowing = followingIds.has(user._id.toString());
-    });
+    for (const user of result) {
+      const userRank =
+        (await this.userModel.countDocuments({
+          score: { $gt: user.score },
+        })) + 1;
+      user.rank = userRank;
+      user.isFollowing = followingIds.has(user.id.toString());
+    }
 
+    result.sort((a, b) => a.rank - b.rank);
+    
     return await this.paginationService.paginate(
       result as unknown as { _id: any }[],
       pagination,

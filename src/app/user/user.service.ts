@@ -106,6 +106,32 @@ export class UserService {
     };
   }
 
+  async getUserLocalLeaderboard(pagination: PaginationArgs, limit: number, user: User) {
+    const followings = await this.followerModel
+      .find({ follower: user.id, deleted_at: { $eq: null } })
+      .populate('following')
+      .exec();
+
+    const result = followings.map((f) => f.following);
+    result.sort((a, b) => b.score - a.score);
+
+    const paginatedUsers = await this.paginationService.paginate(result as unknown as { _id: any }[], pagination);
+
+    const currentUser = await this.userModel.findOne(
+      { _id: user.id },
+      { score: 1 },
+    );
+    const userRank =
+      (await this.userModel.countDocuments({
+        score: { $gt: currentUser.score },
+      })) + 1;
+
+    return {
+      users: paginatedUsers,
+      currentUserRank: userRank,
+    };
+  }
+
   async findAllUsers(pagination: PaginationArgs, searchTerm?: string, currentUserId?: MongooSchema.Types.ObjectId) {
     let query: any = {};
     
