@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Schema as MongooSchema } from 'mongoose';
-import { Notifications, NotificationsDocument } from './entities/notifications.entity';
+import {
+  Notifications,
+  NotificationsDocument,
+} from './entities/notifications.entity';
 import { User } from '../user/entities/user.entity';
 import { NotificationTypeEnum } from '../shared/enum/notificationType.enum';
 import { PaginationArgs } from '../common/dto/get-paginated.args';
@@ -10,26 +13,26 @@ import { MarkAsReadInput } from './dto/mark-as-read.input';
 import { Joke } from '../jokes/entities/joke.entity';
 
 export interface pushNotificationData extends sendNotification {
-  title: string,
-  body: string,
-  badge: number,
-  data: object,
+  title: string;
+  body: string;
+  badge: number;
+  data: object;
 }
 
 export interface sendNotification {
-  expoPushToken: string,
-  sender: User,
-  reciever: User,
-  joke?: Joke
+  expoPushToken: string;
+  sender: User;
+  reciever: User;
+  joke?: Joke;
 }
 
 export interface messageInterface {
-  to: string,
-  sound: string,
-  title: string,
-  body: string,
-  badge: number,
-  data: object,
+  to: string;
+  sound: string;
+  title: string;
+  body: string;
+  badge: number;
+  data: object;
 }
 
 @Injectable()
@@ -40,7 +43,7 @@ export class NotificationService {
     private readonly paginationService: PaginationService,
   ) {}
 
-  async sendPushNotification (pushData: pushNotificationData) {
+  async sendPushNotification(pushData: pushNotificationData) {
     const message: messageInterface = {
       to: pushData.expoPushToken,
       sound: 'default',
@@ -49,7 +52,7 @@ export class NotificationService {
       badge: pushData.badge,
       data: pushData.data,
     };
- 
+
     await fetch('https://exp.host/--/api/v2/push/send', {
       method: 'POST',
       headers: {
@@ -61,9 +64,9 @@ export class NotificationService {
     })
       .then((res) => res.json())
       .then((data) => console.log(data));
-  };
+  }
 
-  async sendCreateJokeNotification (sendNotification: sendNotification) {
+  async sendCreateJokeNotification(sendNotification: sendNotification) {
     // Step 1: Count unread notifications for this user
     const unreadCount = await this.notificationModel.countDocuments({
       userId: sendNotification.reciever.id,
@@ -76,7 +79,7 @@ export class NotificationService {
       title: `${sendNotification.sender.name}`,
       body: 'Is boiling something!',
       badge: unreadCount + 1, // Incrementing by 1 to include this new one
-      data: { userId: sendNotification.sender.id },
+      data: { jokeId: sendNotification.joke?.id },
     };
 
     // Step 3: Send push notification
@@ -95,11 +98,11 @@ export class NotificationService {
     });
 
     await notification.save();
-  };
+  }
 
-  async sendFollowNotification (sendNotification: sendNotification) {
-     // Step 1: Count unread notifications for this user
-     const unreadCount = await this.notificationModel.countDocuments({
+  async sendFollowNotification(sendNotification: sendNotification) {
+    // Step 1: Count unread notifications for this user
+    const unreadCount = await this.notificationModel.countDocuments({
       userId: sendNotification.reciever.id,
       isRead: false,
     });
@@ -116,8 +119,8 @@ export class NotificationService {
     // Step 3: Send push notification
     await this.sendPushNotification(pushNotificationData);
 
-     // Step 4: Save the notification in DB
-     const notification = new this.notificationModel({
+    // Step 4: Save the notification in DB
+    const notification = new this.notificationModel({
       type: NotificationTypeEnum.FOLLOW,
       title: pushNotificationData.title,
       message: pushNotificationData.body,
@@ -128,7 +131,7 @@ export class NotificationService {
     });
 
     await notification.save();
-  };
+  }
 
   async findUserNotifications(
     pagination: PaginationArgs,
@@ -138,7 +141,7 @@ export class NotificationService {
       .find({
         userId: _id,
       })
-      .populate('sender') 
+      .populate('sender')
       .sort({ _id: -1 });
 
     return await this.paginationService.paginate(notifications, pagination);
@@ -149,9 +152,9 @@ export class NotificationService {
 
     const result = await this.notificationModel.updateMany(
       { _id: { $in: notificationIds }, isRead: false },
-      { $set: { isRead: true, updatedAt: new Date() } }
+      { $set: { isRead: true, updatedAt: new Date() } },
     );
 
     return result.modifiedCount > 0;
-  } 
+  }
 }
