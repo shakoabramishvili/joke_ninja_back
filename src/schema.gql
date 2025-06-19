@@ -167,6 +167,13 @@ type Query {
   userNotifications(first: Int, after: String, last: Int, before: String): PaginatedNotifications!
   followings(userId: ID!, first: Int, after: String, last: Int, before: String): PaginatedFollower!
   followers(userId: ID!, first: Int, after: String, last: Int, before: String): PaginatedFollower!
+  generateAiInteraction(input: GenerateInteractionInput!): String!
+}
+
+input GenerateInteractionInput {
+  promptContext: String!
+  userId: String!
+  secondUserId: String
 }
 
 type Mutation {
