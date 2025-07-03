@@ -72,8 +72,8 @@ export const followJokeGenerator = async (
   );
 };
 
-export const followJokeGeneratorGeneral = async () => {
+export const followJokeGeneratorGeneral = async (action: 'followed' | 'unfollowed') => {
   return await AIgeneratesInteraction(
-    "User just follewed another user. don't always use general words like Congrats, Stalking...",
+    `User just ${action} another user. don't always use general words like Congrats, Stalking...`,
   );
 };

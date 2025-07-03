@@ -44,6 +44,7 @@ export class AiInteractionsService {
     userId?: string,
     secondUserId?: string,
   ) {
+    
     let generatorType: GeneratorType;
     let prompt: string = '';
     let userInfo: UserInfo[] | undefined;
@@ -64,12 +65,17 @@ export class AiInteractionsService {
     // Generate text based on generator type
     switch (promptContext) {
       case PromptContext.FOLLOW:
-        let followRes = await followJokeGeneratorGeneral();
+        let followRes = await followJokeGeneratorGeneral('followed');
         generatedText = followRes.generated;
         prompt = followRes.prompt;
         break;
+      case PromptContext.UNFOLLOW:
+        let unFollowRes = await followJokeGeneratorGeneral('unfollowed');
+        generatedText = unFollowRes.generated;
+        prompt = unFollowRes.prompt;
+        break;
       default:
-        const defaultRes = await followJokeGeneratorGeneral();
+        const defaultRes = await followJokeGeneratorGeneral('followed');
         generatedText = defaultRes.generated;
         prompt = defaultRes.prompt;
     }

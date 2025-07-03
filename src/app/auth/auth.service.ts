@@ -137,7 +137,6 @@ export class AuthService {
     }
 
     const user = await this.userService.createUser(createUserInput)
-    console.log(user, 'user');
     return this.login(user)
   }
 }
