@@ -18,6 +18,7 @@ import {
 import { JokesModule } from './jokes/jokes.module';
 import { SharedModule } from './shared/shared.module';
 import { FollowerModule } from './follower/follower.module';
+import { AiInteractionsModule } from './ai-interactions/ai-interactions.module';
 
 @Module({
   imports: [
@@ -70,7 +71,8 @@ import { FollowerModule } from './follower/follower.module';
     AuthModule,
     JokesModule,
     SharedModule,
-    FollowerModule
+    FollowerModule,
+    AiInteractionsModule,
   ],
   providers: [],
 })

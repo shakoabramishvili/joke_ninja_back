@@ -112,9 +112,11 @@ export class UserService {
       .populate('following')
       .exec();
 
-    const result = followings.map((f) => f.following);
-    result.sort((a, b) => b.score - a.score);
-
+      let result = followings.map((f) => f.following);
+      // shit doesn't work if score is null
+      result.sort((a, b) => b?.score - a?.score);
+      result = result.filter((u) => u !== null);
+      
     const paginatedUsers = await this.paginationService.paginate(result as unknown as { _id: any }[], pagination);
 
     const currentUser = await this.userModel.findOne(
