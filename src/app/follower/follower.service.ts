@@ -114,9 +114,10 @@ export class FolloweService {
       .populate('following')
       .exec();
 
-    const result = followings.map((f) => f.following);
+    const result = followings.map((f) => f.following).filter((u) => u!==null);
+    
     const followingIds = new Set(
-      followings.map((f) => f.following.id.toString()),
+      followings.map((f) => f.following && f.following.id.toString()),
     );
 
      for (const user of result) {
